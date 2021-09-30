@@ -1,0 +1,22 @@
+Running: /opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64/unwrapped/fuse -intstyle ise -incremental -lib unisims_ver -lib unimacro_ver -lib xilinxcorelib_ver -lib secureip -o /home/ise/CSM152A/Proj0/combinational_gates_muxed_tb_isim_beh.exe -prj /home/ise/CSM152A/Proj0/combinational_gates_muxed_tb_beh.prj work.combinational_gates_muxed_tb work.glbl 
+ISim P.20131013 (signature 0xfbc00daa)
+Number of CPUs detected in this system: 4
+Turning on mult-threading, number of parallel sub-compilation jobs: 8 
+Determining compilation order of HDL files
+Analyzing Verilog file "/home/ise/CSM152A/Proj0/src/combinational_gates/combinational_gates_muxed.v" into library work
+Analyzing Verilog file "/home/ise/CSM152A/Proj0/src/combinational_gates/combinational_gates_muxed_TB.v" into library work
+Analyzing Verilog file "/opt/Xilinx/14.7/ISE_DS/ISE//verilog/src/glbl.v" into library work
+Starting static elaboration
+Completed static elaboration
+Fuse Memory Usage: 94924 KB
+Fuse CPU Usage: 1060 ms
+Compiling module combinational_gates_muxed
+Compiling module combinational_gates_muxed_tb
+Compiling module glbl
+Time Resolution for simulation is 1ps.
+Waiting for 1 sub-compilation(s) to finish...
+Compiled 3 Verilog Units
+Built simulation executable /home/ise/CSM152A/Proj0/combinational_gates_muxed_tb_isim_beh.exe
+Fuse Memory Usage: 653088 KB
+Fuse CPU Usage: 1100 ms
+GCC CPU Usage: 340 ms

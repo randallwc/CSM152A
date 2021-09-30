@@ -1,0 +1,10 @@
+Command line:
+   combinational_gates_muxed_tb_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  50161
+
+Wed Mar 31 20:35:16 2021
+
+
+ Elaboration Time: 0.03 sec
