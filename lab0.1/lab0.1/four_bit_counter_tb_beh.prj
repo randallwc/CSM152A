@@ -1,0 +1,3 @@
+verilog work "../src/4_bit_counter.v"
+verilog work "../src/4_bit_counter_TB.v"
+verilog work "C:/Xilinx/14.6/ISE_DS/ISE//verilog/src/glbl.v"
