@@ -1,8 +1,0 @@
-INTSTYLE=ise
-INFILE=/home/ise/CSM152A/Proj0/combinational_gates_muxed.ncd
-OUTFILE=/home/ise/CSM152A/Proj0/combinational_gates_muxed.bit
-FAMILY=Spartan6
-PART=xc6slx16-3csg324
-WORKINGDIR=/home/ise/CSM152A/Proj0
-LICENSE=WebPack
-USER_INFO=212052158_0_0_816

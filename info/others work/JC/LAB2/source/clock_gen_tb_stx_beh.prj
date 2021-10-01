@@ -1,3 +1,0 @@
-verilog isim_temp "../clock_gen.v"
-verilog isim_temp "../testbench_205347556.v"
-verilog isim_temp "/opt/Xilinx/14.7/ISE_DS/ISE//verilog/src/glbl.v"
