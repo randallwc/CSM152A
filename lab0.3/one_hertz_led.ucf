@@ -1,0 +1,9 @@
+## This file is a general .ucf for Nexys3 rev B board
+## To use it in a project:
+## - remove or comment the lines corresponding to unused pins
+## - rename the used signals according to the project
+
+## Leds
+NET "led"         LOC = "U16" | IOSTANDARD = "LVCMOS33";
+
+Net "clk" LOC=V10 | IOSTANDARD=LVCMOS33;
