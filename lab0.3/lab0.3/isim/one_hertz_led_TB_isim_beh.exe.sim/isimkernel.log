@@ -1,0 +1,10 @@
+Command line:
+   one_hertz_led_TB_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  48028
+
+Wed Sep 29 05:35:54 2021
+
+
+ Elaboration Time: 0.02 sec

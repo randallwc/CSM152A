@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2021-09-29T02:11:51</DateModified>
+  <DateModified>2021-09-29T04:54:17</DateModified>
   <ModuleName>combinational_gates_muxed</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
   <SavedFilePath>/home/ise/CSM152A/lab0/iseconfig/combinational_gates_muxed.xreport</SavedFilePath>

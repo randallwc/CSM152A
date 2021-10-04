@@ -11,8 +11,5 @@
 <msg type="info" file="ProjectMgmt" num="1845" ><arg fmt="%s" index="1">Analyzing Verilog file &quot;/home/ise/CSM152A/lab0/src/combinational_gates/combinational_gates_muxed.v&quot; into library work</arg>
 </msg>
 
-<msg type="info" file="ProjectMgmt" num="1845" ><arg fmt="%s" index="1">Analyzing Verilog file &quot;/home/ise/CSM152A/lab0/src/combinational_gates/combinational_gates_muxed_TB.v&quot; into library work</arg>
-</msg>
-
 </messages>
 
