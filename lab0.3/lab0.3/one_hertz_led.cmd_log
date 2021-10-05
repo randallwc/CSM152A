@@ -1,0 +1,6 @@
+xst -intstyle ise -ifn "/home/ise/CSM152A/lab0.3/lab0.3/one_hertz_led.xst" -ofn "/home/ise/CSM152A/lab0.3/lab0.3/one_hertz_led.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -uc /home/ise/CSM152A/lab0.3/src/one_hertz_led.ucf -p xc6slx16-csg324-3 one_hertz_led.ngc one_hertz_led.ngd  
+map -intstyle ise -p xc6slx16-csg324-3 -w -logic_opt off -ol high -t 1 -xt 0 -register_duplication off -r 4 -global_opt off -mt off -ir off -pr off -lc off -power off -o one_hertz_led_map.ncd one_hertz_led.ngd one_hertz_led.pcf 
+par -w -intstyle ise -ol high -mt off one_hertz_led_map.ncd one_hertz_led.ncd one_hertz_led.pcf 
+trce -intstyle ise -v 3 -s 3 -n 3 -fastpaths -xml one_hertz_led.twx one_hertz_led.ncd -o one_hertz_led.twr one_hertz_led.pcf 
+bitgen -intstyle ise -f one_hertz_led.ut one_hertz_led.ncd 

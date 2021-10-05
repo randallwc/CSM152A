@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=/home/ise/CSM152A/lab0.3/lab0.3/one_hertz_led.ncd
+OUTFILE=/home/ise/CSM152A/lab0.3/lab0.3/one_hertz_led.bit
+FAMILY=Spartan6
+PART=xc6slx16-3csg324
+WORKINGDIR=/home/ise/CSM152A/lab0.3/lab0.3
+LICENSE=WebPack
+USER_INFO=212052158_0_0_816
