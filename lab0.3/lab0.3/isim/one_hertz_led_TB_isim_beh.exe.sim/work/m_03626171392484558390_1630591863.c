@@ -23,8 +23,7 @@
 #endif
 static const char *ng0 = "/home/ise/CSM152A/lab0.3/src/one_hertz_led.v";
 static int ng1[] = {1, 0};
-static int ng2[] = {0, 0};
-static int ng3[] = {5, 0};
+static int ng2[] = {5, 0};
 
 
 
@@ -40,7 +39,7 @@ LAB2:    xsi_set_current_line(7, ng0);
     t2 = (t0 + 1448);
     xsi_vlogvar_assign_value(t2, t1, 0, 0, 1);
     xsi_set_current_line(8, ng0);
-    t1 = ((char*)((ng2)));
+    t1 = ((char*)((ng1)));
     t2 = (t0 + 1608);
     xsi_vlogvar_assign_value(t2, t1, 0, 0, 29);
 
@@ -118,11 +117,11 @@ LAB2:    xsi_set_current_line(10, ng0);
 LAB1:    return;
 LAB4:    xsi_set_current_line(11, ng0);
 
-LAB5:    xsi_set_current_line(13, ng0);
+LAB5:    xsi_set_current_line(12, ng0);
     t4 = (t0 + 1608);
     t5 = (t4 + 56U);
     t6 = *((char **)t5);
-    t7 = ((char*)((ng3)));
+    t7 = ((char*)((ng2)));
     memset(t8, 0, 8);
     t9 = (t6 + 4);
     t10 = (t7 + 4);
@@ -155,9 +154,9 @@ LAB9:    t24 = (t8 + 4);
     if (t29 > 0)
         goto LAB10;
 
-LAB11:    xsi_set_current_line(19, ng0);
+LAB11:    xsi_set_current_line(18, ng0);
 
-LAB20:    xsi_set_current_line(20, ng0);
+LAB20:    xsi_set_current_line(19, ng0);
     t2 = (t0 + 1608);
     t3 = (t2 + 56U);
     t4 = *((char **)t3);
@@ -174,9 +173,9 @@ LAB8:    t23 = (t8 + 4);
     *((unsigned int *)t23) = 1;
     goto LAB9;
 
-LAB10:    xsi_set_current_line(14, ng0);
+LAB10:    xsi_set_current_line(13, ng0);
 
-LAB13:    xsi_set_current_line(15, ng0);
+LAB13:    xsi_set_current_line(14, ng0);
     t31 = (t0 + 1448);
     t32 = (t31 + 56U);
     t33 = *((char **)t32);
@@ -212,8 +211,8 @@ LAB18:    t49 = *((unsigned int *)t30);
     *((unsigned int *)t41) = (t50 & 1U);
     t51 = (t0 + 1448);
     xsi_vlogvar_assign_value(t51, t30, 0, 0, 1);
-    xsi_set_current_line(16, ng0);
-    t2 = ((char*)((ng2)));
+    xsi_set_current_line(15, ng0);
+    t2 = ((char*)((ng1)));
     t3 = (t0 + 1608);
     xsi_vlogvar_assign_value(t3, t2, 0, 0, 29);
     goto LAB12;
