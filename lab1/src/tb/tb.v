@@ -33,7 +33,7 @@ module tb;
         #1000 btnR = 0;
         #1500000;
 
-		  seq_file = $fopen("/home/ise/CS_M152A/Lab 1/seq.code", "r");
+		  seq_file = $fopen("../../seq.code", "r");
 		  if (seq_file == 0) 
 			begin
 				$display("FILE READ ERROR");
