@@ -6,6 +6,11 @@ module tb;
    reg       clk;
    reg       btnS;
    reg       btnR;
+	
+	// Stuff for SEQ.CODE
+	integer seq_file;
+	integer seq_line;
+	reg[7:0] instruction_line;
    
    integer   i;
    
@@ -24,22 +29,39 @@ module tb;
         clk = 0;
         btnR = 1;
         btnS = 0;
+		  seq_file = 0;
         #1000 btnR = 0;
         #1500000;
-        
-        tskRunPUSH(0,4);
-        tskRunPUSH(0,0);
-        tskRunPUSH(1,3);
-        tskRunMULT(0,1,2);
-        tskRunADD(2,0,3);
-        tskRunSEND(0);
-        tskRunSEND(1);
-        tskRunSEND(2);
-        tskRunSEND(3);
+
+		  seq_file = $fopen("/home/ise/CS_M152A/Lab 1/seq.code", "r");
+		  if (seq_file == 0) 
+			begin
+				$display("FILE READ ERROR");
+				$finish;
+			end
+		  
+		  seq_line = $fscanf(seq_file, "%b\n", instruction_line);
         
         #1000;        
-        $finish;
      end
+	  
+	always @(posedge clk)
+		begin
+			if (seq_file != 0)
+				begin
+				if (!$feof(seq_file))
+					begin
+						seq_line = $fscanf(seq_file, "%b\n", instruction_line);
+						tskRunInst(instruction_line);
+						$display ("Instruction: [%b]", instruction_line);
+					end
+				else
+					begin
+						$finish;
+						$fclose(seq_file);
+					end
+			end
+		end
 
    always #5 clk = ~clk;
    
