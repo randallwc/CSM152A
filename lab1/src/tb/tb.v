@@ -11,6 +11,7 @@ reg       btnR;
 integer seq_file;
 integer seq_line;
 reg[7:0] instruction_line;
+reg[10:0] lines;
 
 integer   i;
 
@@ -35,8 +36,9 @@ begin
         $display("ERROR: FILE READ ERROR");
         $finish;
     end
-    seq_line = $fscanf(seq_file, "%b\n", instruction_line); // read first line and disgard -- TODO remove
-    // TODO parse number
+    seq_line = $fscanf(seq_file, "%b\n", instruction_line); // read first line
+	 $display("DEBUG: Number of lines: binary=%b base10=%i", instruction_line, instruction_line);
+    lines = instruction_line; // save value
     #1000;        
 end
   
@@ -44,16 +46,12 @@ always @(posedge clk)
 begin
     if (seq_file != 0)
     begin
-        // if not end of file
-        // TODO: and not past given length
-        if (!$feof(seq_file))
+	     $display("DEBUG: lines left %i",lines);
+        if (!$feof(seq_file) && lines > 0) // if not end of file and not past num lines
         begin
-            // read line
-            seq_line = $fscanf(seq_file, "%b\n", instruction_line);
-            // run instruction
-            tskRunInst(instruction_line);
-            // display instruction
-            $display ("DEBUG: Instruction: [%b]", instruction_line);
+            seq_line = $fscanf(seq_file, "%b\n", instruction_line); // read line
+            tskRunInst(instruction_line); // run instruction
+				lines = lines - 1; // decrement num lines
         end
         else
         begin
