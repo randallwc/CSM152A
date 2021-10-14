@@ -1,0 +1,37 @@
+Running: C:\Xilinx\14.7\ISE_DS\ISE\bin\nt64\unwrapped\fuse.exe -intstyle ise -incremental -lib unisims_ver -lib unimacro_ver -lib xilinxcorelib_ver -lib secureip -o C:/Users/wrand/Desktop/CSM152A/lab1/lab1/tb_isim_beh.exe -prj C:/Users/wrand/Desktop/CSM152A/lab1/lab1/tb_beh.prj work.tb work.glbl 
+ISim P.20131013 (signature 0x7708f090)
+Number of CPUs detected in this system: 8
+Turning on mult-threading, number of parallel sub-compilation jobs: 16 
+Determining compilation order of HDL files
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/seq_mult.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/seq_add.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/uart_fifo.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/uart.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/seq_rf.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/seq_alu.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/uart_top.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/seq.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/tb/model_uart.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/rtl/nexys3.v" into library work
+Analyzing Verilog file "C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/tb/tb.v" into library work
+Analyzing Verilog file "C:/Xilinx/14.7/ISE_DS/ISE//verilog/src/glbl.v" into library work
+Starting static elaboration
+Completed static elaboration
+Compiling module model_uart(baud=1000000,name="UA...
+Compiling module seq_rf_default
+Compiling module seq_add_default
+Compiling module seq_mult_default
+Compiling module seq_alu_default
+Compiling module seq_default
+Compiling module uart_fifo
+Compiling module uart
+Compiling module uart_top_default
+Compiling module nexys3_default
+Compiling module tb
+Compiling module glbl
+Time Resolution for simulation is 1ps.
+Waiting for 1 sub-compilation(s) to finish...
+Compiled 12 Verilog Units
+Built simulation executable C:/Users/wrand/Desktop/CSM152A/lab1/lab1/tb_isim_beh.exe
+Fuse Memory Usage: 29216 KB
+Fuse CPU Usage: 577 ms
