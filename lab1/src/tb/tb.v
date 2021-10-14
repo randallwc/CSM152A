@@ -37,7 +37,7 @@ begin
         $finish;
     end
     seq_line = $fscanf(seq_file, "%b\n", instruction_line); // read first line
-	 $display("DEBUG: Number of lines: binary=%b base10=%i", instruction_line, instruction_line);
+    $display("DEBUG: Number of lines: binary=%b base10=%i", instruction_line, instruction_line);
     lines = instruction_line; // save value
     #1000;        
 end
@@ -46,16 +46,16 @@ always @(posedge clk)
 begin
     if (seq_file != 0)
     begin
-	     $display("DEBUG: lines left %i",lines);
+        $display("DEBUG: lines left %i",lines);
         if (!$feof(seq_file) && lines > 0) // if not end of file and not past num lines
         begin
             seq_line = $fscanf(seq_file, "%b\n", instruction_line); // read line
             tskRunInst(instruction_line); // run instruction
-				lines = lines - 1; // decrement num lines
+            lines = lines - 1; // decrement num lines
         end
         else
         begin
-		      $fclose(seq_file);
+            $fclose(seq_file);
             $finish;
         end
     end
