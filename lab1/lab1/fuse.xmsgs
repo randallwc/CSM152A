@@ -8,7 +8,7 @@
 <msg type="warning" file="HDLCompiler" num="485" delta="unknown" >"C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/tb/tb.v" Line 40: Illegal format specifier <arg fmt="%c" index="1">i</arg> for <arg fmt="%s" index="2">display</arg>
 </msg>
 
-<msg type="warning" file="HDLCompiler" num="485" delta="unknown" >"C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/tb/tb.v" Line 50: Illegal format specifier <arg fmt="%c" index="1">i</arg> for <arg fmt="%s" index="2">display</arg>
+<msg type="warning" file="HDLCompiler" num="485" delta="unknown" >"C:/Users/wrand/Desktop/CSM152A/lab1/lab1/../src/tb/tb.v" Line 49: Illegal format specifier <arg fmt="%c" index="1">i</arg> for <arg fmt="%s" index="2">display</arg>
 </msg>
 
 </messages>
