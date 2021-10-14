@@ -9,3 +9,6 @@ def fib(n:int):
         cur = tprev + cur
     print(n,cur,hex(cur))
 
+import sys
+
+fib(int(sys.argv[1]))
