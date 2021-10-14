@@ -29,7 +29,7 @@ begin
     seq_file = 0;
     #1000 btnR = 0;
     #1500000;
-    seq_file = $fopen("/home/ise/CS_M152A/Lab 1/fib.code", "r");
+    seq_file = $fopen("C:/Users/wrand/Desktop/CSM152A/lab1/fib.code", "r");
     if (seq_file == 0) 
     begin
         $display("ERROR: FILE READ ERROR");
@@ -57,8 +57,8 @@ begin
         end
         else
         begin
+		      $fclose(seq_file);
             $finish;
-            $fclose(seq_file);
         end
     end
 end
