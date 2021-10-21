@@ -102,13 +102,21 @@ module converter (/*AUTOARG*/
    output        sign;
 	output [11:0] magnitude;
 	
+	reg [3:0] i;
 	reg [11:0] flipped_analog;
    
    // Logic
    input         clk;                  // 100MHz
 	
 	// Assignment
-	assign flipped_analog = !analog;
+	always @(posedge clk)
+	begin
+		for (i=0; i<12; i = i+1)
+		begin
+			flipped_analog[i] = !analog[i];
+		end
+	end
+
 	assign magnitude = flipped_analog + 1;
 	
 	assign sign = analog[11];
@@ -126,7 +134,9 @@ module counter (/*AUTOARG*/
    input  [11:0] magnitude;
 	output [2:0]  exponent;
 	
+	reg [2:0] exponent_reg;
 	reg [3:0] zero_count;
+	reg [3:0] i;
    
    // Logic
    input         clk;                  // 100MHz
@@ -135,6 +145,7 @@ module counter (/*AUTOARG*/
 	initial
 	begin
 		zero_count = 0;
+		exponent_reg = 0;
 	end
 	
 	always @(posedge clk)
@@ -144,23 +155,25 @@ module counter (/*AUTOARG*/
 		begin
 			if (!magnitude[i])
 			begin
-				zero_count <= zero_count + 1;
+				zero_count = zero_count + 1;
 			end
 			else
 			begin
-				i <= -1;
+				i = -1;
 			end
 		end
 		
 		if (zero_count >= 8)
 		begin
-			exponent <= 0;
+			exponent_reg = 0;
 		end
 		else
 		begin
-			exponent <= (zero_count == 7 ? 1 : (zero_count == 6 ? 2 : (zero_count == 5 ? 3 : (zero_count == 4 ? 4 : (zero_count == 3 ? 5 : (zero_count == 2 ? 6 : (zero_count == 1 ? 7 : 8)))))));
+			exponent_reg = (zero_count == 7 ? 1 : (zero_count == 6 ? 2 : (zero_count == 5 ? 3 : (zero_count == 4 ? 4 : (zero_count == 3 ? 5 : (zero_count == 2 ? 6 : 7))))));
 		end
 	end
+	
+	assign exponent = exponent_reg;
 	
 endmodule // counter
 
@@ -176,7 +189,10 @@ module extracter (/*AUTOARG*/
    output [3:0]  significand;
 	output        fifth;
 	
+	reg [11:0] magnitude_reg;
+	reg [3:0] i;
 	reg [3:0] push_reg;
+	reg fifth_reg;
    
    // Logic
    input         clk;                  // 100MHz
@@ -189,23 +205,92 @@ module extracter (/*AUTOARG*/
 	
 	always @(posedge clk)
 	begin
+		magnitude_reg = magnitude;
 		for (i=11; i>=0; i = i-1)
 		begin
 			if (i <= 3)
 			begin
-				push_reg = magnitude[3:0];
-				fifth = 0;
+				push_reg = magnitude_reg[11:8];
+				fifth_reg = 0;
 			end
 			else
 			begin
-				push_reg = magnitude[i:i-3];
-				if (push_reg[3])
+				if (magnitude[11])
 				begin
-					fifth = magnitude[i-4];
+					push_reg = magnitude_reg[11:8];
+					fifth_reg = magnitude_reg[7];
 					i = -1;
+				end
+				else
+				begin
+					magnitude_reg = {magnitude_reg[10:0],1'b0};
 				end
 			end
 		end
 	end
 	
-endmodule // converter
+	assign magnitude = magnitude_reg;
+	assign fifth = fifth_reg;
+	
+endmodule // extracter
+
+module rounder (/*AUTOARG*/
+   // Outputs
+   o_exponent, o_significand,
+   // Inputs
+   i_exponent, i_significand, i_fifth, clk
+   );
+	
+	// Misc.
+   input  [2:0]  i_exponent;
+	input  [3:0]  i_significand;
+	input         i_fifth;
+   output [2:0]  o_exponent;
+	output [3:0]  o_significand;
+	
+	reg [2:0]  exponent_reg;
+	reg [3:0]  significand_reg;
+   
+   // Logic
+   input         clk;                  // 100MHz
+	
+	// Assignment
+	initial
+	begin
+
+	end
+	
+	always @(posedge clk)
+	begin
+		if (i_fifth)
+		begin
+			if (i_significand == 15)
+			begin
+				if (i_exponent == 7)
+				begin
+					exponent_reg = i_exponent;
+					significand_reg = i_significand;
+				end
+				else
+				begin
+					significand_reg = 8;
+					exponent_reg = i_exponent + 1;
+				end
+			end
+			else
+			begin
+				exponent_reg = i_exponent;
+				significand_reg = i_significand + 1;
+			end
+		end
+		else
+		begin
+			exponent_reg = i_exponent;
+			significand_reg = i_significand;
+		end
+	end
+	
+	assign o_exponent = exponent_reg;
+	assign o_significand = significand_reg;
+	
+endmodule // rounder
