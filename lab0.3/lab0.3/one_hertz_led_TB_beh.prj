@@ -1,3 +1,0 @@
-verilog work "../src/one_hertz_led.v"
-verilog work "../src/one_hertz_led_TB.v"
-verilog work "/opt/Xilinx/14.7/ISE_DS/ISE//verilog/src/glbl.v"

@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2021-09-29T04:58:15</DateModified>
+  <DateModified>2021-10-20T22:53:17</DateModified>
   <ModuleName>modern_four_bit_counter</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>/home/ise/CSM152A/lab0.2/lab0.2/iseconfig/modern_four_bit_counter.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/home/ise/CSM152A/lab0.2/lab0.2/</ImplementationReportsDirectory>
+  <SavedFilePath>C:/Users/wrand/Desktop/CSM152A/lab0.2/lab0.2/iseconfig/modern_four_bit_counter.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>C:/Users/wrand/Desktop/CSM152A/lab0.2/lab0.2\</ImplementationReportsDirectory>
   <DateInitialized>2021-09-30T13:23:45</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>

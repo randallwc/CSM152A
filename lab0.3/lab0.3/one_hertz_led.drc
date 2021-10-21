@@ -1,8 +1,0 @@
-Release 14.7 Drc P.20131013 (lin64)
-Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
-
-Wed Sep 29 05:58:49 2021
-
-drc -z one_hertz_led.ncd one_hertz_led.pcf
-
-DRC detected 0 errors and 0 warnings.
