@@ -28,13 +28,17 @@ module nexys3 (/*AUTOARG*/
 	// Add more registers as needed
 	// May need to add validation logic
 	
+	assign sign = convert_sign;
+	assign exponent = round_exponent;
+	assign significand = round_significand;
+	
    // ===========================================================================
    // Converter
    // ===========================================================================
 
    converter converter_instance (// Outputs
-             .sign                 (converter_sign),
-             .magnitude            (converter_magnitude),
+             .sign                 (convert_sign),
+             .magnitude            (convert_magnitude),
              // Inputs
              .analog               (analog),
              /*AUTOINST*/
@@ -48,10 +52,10 @@ module nexys3 (/*AUTOARG*/
    counter counter_instance (// Outputs
              .exponent                 (count_exponent),
              // Inputs
-             .magnitude                 (convert_magnitude),
+             .magnitude                (convert_magnitude),
              /*AUTOINST*/
              // Inputs
-             .clk                       (clk));
+             .clk                      (clk));
    
    // ===========================================================================
    // Extracter
