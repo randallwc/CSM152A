@@ -1,1 +1,0 @@
--intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -lib "secureip" -o "/home/ise/CSM152A/lab0.2/lab0.2/modern_four_bit_counter_tb_isim_beh.exe" -prj "/home/ise/CSM152A/lab0.2/lab0.2/modern_four_bit_counter_tb_beh.prj" "work.modern_four_bit_counter_tb" "work.glbl" 
