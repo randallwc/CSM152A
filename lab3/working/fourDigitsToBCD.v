@@ -24,35 +24,58 @@ module fourDigitsToBCD(
 	output [27:0] out_bcds
    );
 	
-	reg [4:0] reg_digit;
-	reg [6:0] reg_bcd;
+	reg [4:0] reg_digit_1;
+	wire [6:0] reg_bcd_1;
+    reg [4:0] reg_digit_2;
+	wire [6:0] reg_bcd_2;
+    reg [4:0] reg_digit_3;
+	wire [6:0] reg_bcd_3;
+    reg [4:0] reg_digit_4;
+	wire [6:0] reg_bcd_4;
+    
 	reg [27:0] reg_bcds;
 	
-	digitToBCD m_digitToBCD(
-	.in_digit (reg_digit),
-	.out_bcd (reg_bcd)
+	digitToBCD m_digitToBCD_1(
+	.in_digit (reg_digit_1),
+	.out_bcd (reg_bcd_1)
+	);
+    
+    digitToBCD m_digitToBCD_2(
+	.in_digit (reg_digit_2),
+	.out_bcd (reg_bcd_2)
+	);
+    
+    digitToBCD m_digitToBCD_3(
+	.in_digit (reg_digit_3),
+	.out_bcd (reg_bcd_3)
+	);
+    
+    digitToBCD m_digitToBCD_4(
+	.in_digit (reg_digit_4),
+	.out_bcd (reg_bcd_4)
 	);
 	
 	always @(*)
 	begin
 		reg_bcds = 0;
 		
-		reg_digit = in_minute / 10;
-        reg_bcds = {reg_bcds[20:0], reg_bcd};
-		$display("DIGIT: %b", reg_digit);
-        $display("BCD: %b", reg_bcd);
+		reg_digit_1 = in_minute / 10;
+//        reg_bcds = {reg_bcds[20:0], reg_bcd_1};
+//		$display("DIGIT: %b", reg_digit);
+//        $display("BCD: %b", reg_bcd);
 		
-		reg_digit = in_minute % 10;
-//		reg_bcds = {reg_bcds[20:0], reg_bcd};
-		$display("DIGIT: %b", reg_digit);
+		reg_digit_2 = in_minute % 10;
+//		reg_bcds = {reg_bcds[20:0], reg_bcd_2};
+//		$display("DIGIT: %b", reg_digit);
 		
-		reg_digit = in_second / 10;
-//		reg_bcds = {reg_bcds[20:0], reg_bcd};
-		$display("DIGIT: %b", reg_digit);
+		reg_digit_3 = in_second / 10;
+//		reg_bcds = {reg_bcds[20:0], reg_bcd_3};
+//		$display("DIGIT: %b", reg_digit);
 		
-		reg_digit = in_second % 10;
-//		reg_bcds = {reg_bcds[20:0], reg_bcd};
-		$display("DIGIT: %b", reg_digit);
+		reg_digit_4 = in_second % 10;
+//		reg_bcds = {reg_bcds[20:0], reg_bcd_4};
+//		$display("DIGIT: %b", reg_digit);
+        reg_bcds = {reg_bcd_1,reg_bcd_2,reg_bcd_3,reg_bcd_4};
 	end
 	
 	assign out_bcds = reg_bcds;
