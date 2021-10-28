@@ -19,7 +19,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module clockCounter(
-    input in_clk,
+    input in_norm_clk,
+    input in_adj_clk,
     input in_sel,
     input in_adj,
     input in_rst,
@@ -42,11 +43,16 @@ module clockCounter(
         reg_second = 0;
     end
     
-    always @(posedge in_clk)
+    always @(posedge in_norm_clk)
     begin
         if (in_rst)
         begin
-        
+            reg_second = 0;
+            reg_minute = 0;
+        end
+        else if (in_pause)
+        begin
+            // do nothing
         end
         else if (!in_adj)
         begin
@@ -56,9 +62,32 @@ module clockCounter(
             reg_second = reg_second % 60;
             reg_minute = reg_minute % 60;
         end
-        else
+    end
+    
+    always @(posedge in_adj_clk)
+    begin
+        if (in_rst)
         begin
-            // adjustment logic
+            reg_second = 0;
+            reg_minute = 0;
+        end
+        else if (in_pause)
+        begin
+            // do nothing
+        end
+        else if (in_adj)
+        begin
+            if (!in_sel)
+            begin
+                reg_minute = reg_minute + 1;
+                reg_minute = reg_minute % 60;
+            end
+            else
+                reg_second = reg_second + 1;
+                reg_second = reg_second % 60;
+            begin
+            
+            end
         end
     end
     
