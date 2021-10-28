@@ -161,10 +161,6 @@ module getRoundedFloat(
         overflow_F = in_F + in_sig_bit;
         // if F overflows then increase the exponent by 1
         overflow_E = in_E + overflow_F[4];
-        // divide by 2 if overflowed
-        out_F = overflow_F >> overflow_F[4];
-        // truncate the exponent
-        out_E = overflow_E[2:0];
         
         // catch the edge case where exponent overflows
         // 12'b0111_1111_111
@@ -172,6 +168,13 @@ module getRoundedFloat(
         begin
             out_F = 4'b1111;
             out_E = 3'b111;
+        end
+        else
+        begin
+            // divide by 2 if overflowed
+            out_F = overflow_F >> overflow_F[4];
+            // truncate the exponent
+            out_E = overflow_E[2:0];
         end
     end
 endmodule

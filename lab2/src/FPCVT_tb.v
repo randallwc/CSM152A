@@ -43,7 +43,6 @@ module FPCVT_tb;
     reg correct_S;
     reg [2:0] correct_E;
     reg [3:0] correct_F;
-    integer i;
 
 	initial 
     begin
@@ -65,11 +64,6 @@ module FPCVT_tb;
         #10 D = 12'b0010_0000_0000; correct_S = 0; correct_E = 6; correct_F = 4'b1000;
         #10 D = 12'b0100_0000_0000; correct_S = 0; correct_E = 7; correct_F = 4'b1000;
         
-//        for ( i=1 ; i<2048 ; i=i+10 )
-//        begin
-//            #10 D = i; correct_S = 0; correct_E = 0; correct_F = 0;
-//        end
-        
         // negative sanity check
         #10 $display("NEGATIVE SANITY CHECKS");
         #10 D = 12'b1111_1111_1111; correct_S = 1; correct_E = 0; correct_F = 4'b0001;
@@ -83,11 +77,6 @@ module FPCVT_tb;
         #10 D = 12'b1111_0000_0000; correct_S = 1; correct_E = 5; correct_F = 4'b1000;
         #10 D = 12'b1110_0000_0000; correct_S = 1; correct_E = 6; correct_F = 4'b1000;
         #10 D = 12'b1100_0000_0000; correct_S = 1; correct_E = 7; correct_F = 4'b1000;
-        
-//        for ( i=1 ; i<2048 ; i=i+10 )
-//        begin
-//            #10 D = -i; correct_S = 0; correct_E = 0; correct_F = 0;
-//        end
         
         // positive tests
         #10 $display("POSITIVE TESTS");
@@ -109,9 +98,12 @@ module FPCVT_tb;
         #10 $display("ROUNDING DOWN TESTS");
         #10 D = 12'b0000_0010_1100; correct_S = 0; correct_E = 2; correct_F = 4'b1011;
         #10 D = 12'b0000_0010_1101; correct_S = 0; correct_E = 2; correct_F = 4'b1011;
+        #10 D = 12'b1100_0110_1101; correct_S = 1; correct_E = 6; correct_F = 4'b1110;
         #10 $display("ROUNDING UP TESTS");
         #10 D = 12'b0000_0010_1110; correct_S = 0; correct_E = 2; correct_F = 4'b1100;
         #10 D = 12'b0000_0010_1111; correct_S = 0; correct_E = 2; correct_F = 4'b1100;
+        #10 D = 12'b0000_0011_1110; correct_S = 0; correct_E = 3; correct_F = 4'b1000;
+        #10 D = 12'b1000_0011_1110; correct_S = 1; correct_E = 7; correct_F = 4'b1111;
         
         // edge cases
         #10 $display("EDGE CASES");
