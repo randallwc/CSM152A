@@ -3,51 +3,53 @@ module fourDigitsToBCD(
     input [5:0] in_minute,
     input [5:0] in_second,
     output [27:0] out_bcds
-   );
+    );
     
-    reg [4:0] reg_digit_1;
-    wire [6:0] reg_bcd_1;
-    reg [4:0] reg_digit_2;
-    wire [6:0] reg_bcd_2;
-    reg [4:0] reg_digit_3;
-    wire [6:0] reg_bcd_3;
-    reg [4:0] reg_digit_4;
-    wire [6:0] reg_bcd_4;
+    // internal wires
+    wire [6:0] m_wire_bcd_1;
+    wire [6:0] m_wire_bcd_2;
+    wire [6:0] m_wire_bcd_3;
+    wire [6:0] m_wire_bcd_4;
     
-    reg [27:0] reg_bcds;
+    // internal registers
+    reg [4:0] m_reg_digit_1;
+    reg [4:0] m_reg_digit_2;
+    reg [4:0] m_reg_digit_3;
+    reg [4:0] m_reg_digit_4;
+    reg [27:0] m_reg_bcds;
     
     digitToBCD m_digitToBCD_1(
-    .in_digit (reg_digit_1),
-    .out_bcd (reg_bcd_1)
+    .in_digit (m_reg_digit_1),
+    .out_bcd (m_wire_bcd_1)
     );
     
     digitToBCD m_digitToBCD_2(
-    .in_digit (reg_digit_2),
-    .out_bcd (reg_bcd_2)
+    .in_digit (m_reg_digit_2),
+    .out_bcd (m_wire_bcd_2)
     );
     
     digitToBCD m_digitToBCD_3(
-    .in_digit (reg_digit_3),
-    .out_bcd (reg_bcd_3)
+    .in_digit (m_reg_digit_3),
+    .out_bcd (m_wire_bcd_3)
     );
     
     digitToBCD m_digitToBCD_4(
-    .in_digit (reg_digit_4),
-    .out_bcd (reg_bcd_4)
+    .in_digit (m_reg_digit_4),
+    .out_bcd (m_wire_bcd_4)
     );
     
     always @(*)
     begin
-        reg_bcds = 0;
-        reg_digit_1 = in_minute / 10;
-        reg_digit_2 = in_minute % 10;
-        reg_digit_3 = in_second / 10;
-        reg_digit_4 = in_second % 10;
-        reg_bcds = {reg_bcd_1,reg_bcd_2,reg_bcd_3,reg_bcd_4};
+        m_reg_bcds = 0;
+        m_reg_digit_1 = in_minute / 10;
+        m_reg_digit_2 = in_minute % 10;
+        m_reg_digit_3 = in_second / 10;
+        m_reg_digit_4 = in_second % 10;
+        m_reg_bcds = {m_wire_bcd_1,m_wire_bcd_2,m_wire_bcd_3,m_wire_bcd_4};
     end
 
-    // connect wires
-    assign out_bcds = reg_bcds;
+    // connect output
+    assign out_bcds = m_reg_bcds;
 endmodule
 
 module digitToBCD(
@@ -60,43 +62,43 @@ module digitToBCD(
         case (in_digit)
             0 : begin
                 out_bcd = 7'b0000001;
-		end
+                end
 
             1 : begin
                 out_bcd = 7'b1001111;
-		end
+                end
 
             2 : begin
                 out_bcd = 7'b0010010;
-		end
+                end
 
             3 : begin
                 out_bcd = 7'b0000110;
-		end
+                end
 
             4 : begin
                 out_bcd = 7'b1001100;
-		end
+                end
 
             5 : begin
                 out_bcd = 7'b0100100;
-		end
+                end
 
             6 : begin
                 out_bcd = 7'b0100000;
-		end
+                end
 
             7 : begin
                 out_bcd = 7'b0001111;
-		end
+                end
 
             8 : begin
                 out_bcd = 7'b0000000;
-		end
+                end
 
             9 : begin
                 out_bcd = 7'b0000100;
-		end
+                end
 
             default:
                 out_bcd = 7'b1111111;
