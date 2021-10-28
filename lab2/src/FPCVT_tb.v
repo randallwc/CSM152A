@@ -99,12 +99,13 @@ module FPCVT_tb;
         #10 D = 12'b0000_0010_1100; correct_S = 0; correct_E = 2; correct_F = 4'b1011;
         #10 D = 12'b0000_0010_1101; correct_S = 0; correct_E = 2; correct_F = 4'b1011;
         #10 D = 12'b1100_0110_1101; correct_S = 1; correct_E = 6; correct_F = 4'b1110;
+        #10 D = 12'b0111_1000_0000; correct_S = 0; correct_E = 7; correct_F = 4'b1111;
         #10 $display("ROUNDING UP TESTS");
         #10 D = 12'b0000_0010_1110; correct_S = 0; correct_E = 2; correct_F = 4'b1100;
         #10 D = 12'b0000_0010_1111; correct_S = 0; correct_E = 2; correct_F = 4'b1100;
         #10 D = 12'b0000_0011_1110; correct_S = 0; correct_E = 3; correct_F = 4'b1000;
         #10 D = 12'b1000_0011_1110; correct_S = 1; correct_E = 7; correct_F = 4'b1111;
-        
+        #10 D = 12'b0111_1100_0000; correct_S = 0; correct_E = 7; correct_F = 4'b1111;
         // edge cases
         #10 $display("EDGE CASES");
         #10 D = 12'b0111_1111_1111; correct_S = 0; correct_E = 7; correct_F = 4'b1111;
