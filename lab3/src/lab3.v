@@ -282,3 +282,15 @@ module clockDivider(
         end
     end
 endmodule
+
+module stopwatch(
+    input wire b_clock,
+    input wire b_reset,
+    input wire b_pause,
+    input wire b_select,
+    input wire b_adjust,
+    output reg [7:0] b_seg,
+    output reg [3:0] b_an
+    );
+
+endmodule
