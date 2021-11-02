@@ -110,10 +110,10 @@ module clockCounter(
     reg m_is_paused = 0; // paused register
 
     clockSelector m_clockSelector(
-        in_clock(in_clock),
-        in_clock_adj(in_clock_adj),
-        in_adjust(in_adjust),
-        out_clock(m_clock)
+        .in_clock(in_clock),
+        .in_clock_adj(in_clock_adj),
+        .in_adjust(in_adjust),
+        .out_clock(m_clock)
         );
 
     // if pause button pressed store value in register
@@ -293,4 +293,82 @@ module stopwatch(
     output reg [3:0] b_an
     );
 
+    wire [3:0] m_seconds0;
+    wire [3:0] m_seconds1;
+    wire [3:0] m_minutes0;
+    wire [3:0] m_minutes1;
+
+    wire [7:0] m_display_seconds0;
+    wire [7:0] m_display_seconds1;
+    wire [7:0] m_display_minutes0;
+    wire [7:0] m_display_minutes1;
+    wire [7:0] m_display_empty;
+
+    wire m_one_hz_clock;
+    wire m_two_hz_clock;
+    wire m_segment_clock;
+    wire m_blink_clock;
+    wire m_reset_state;
+    wire m_pause_state;
+
+    reg [1:0] m_current_display_segment = 2'b00;
+
+    debouncer m_debouncer_reset(
+    .in_button(b_reset),
+    .in_clock(b_clock),
+    .out_button_debounced(m_reset_state)
+    );
+
+    debouncer m_debouncer_pause(
+    .in_button(b_pause),
+    .in_clock(b_clock),
+    .out_button_debounced(m_pause_state)
+    );
+
+    clockDivider m_clockDivider(
+    .in_clock(b_clock),
+    .in_reset(m_reset_state),
+    .out_one_hz_clock(m_one_hz_clock),
+    .out_two_hz_clock(m_two_hz_clock),
+    .out_segment_clock(m_segment_clock),
+    .out_blink_clock(m_blink_clock)
+    );
+
+    clockCounter m_clockCounter(
+    .in_reset(m_reset_state),
+    .in_pause(m_pause_state),
+    .in_adjust(b_adjust),
+    .in_select(b_select),
+    .in_clock(b_clock),
+    .in_clock_adj(m_two_hz_clock),
+    .out_minute0(m_minute0),
+    .out_minute1(m_minute1),
+    .out_second0(m_second0),
+    .out_second1(m_second1)
+    );
+
+    sevenSegmentDisplay m_sevenSegment_second0(
+    .in_value(m_seconds0),
+    .out_seven_segment(m_display_seconds0)
+    );
+
+    sevenSegmentDisplay m_sevenSegment_second1(
+    .in_value(m_seconds1),
+    .out_seven_segment(m_display_seconds1)
+    );
+
+    sevenSegmentDisplay m_sevenSegment_minute0(
+    .in_value(m_minutes0),
+    .out_seven_segment(m_display_minutes0)
+    );
+
+    sevenSegmentDisplay m_sevenSegment_minute1(
+    .in_value(m_minutes1),
+    .out_seven_segment(m_display_minutes1)
+    );
+
+    sevenSegmentDisplay m_sevenSegment_blank(
+    .in_value(4b'1111),
+    .out_seven_segment(m_display_empty)
+    );
 endmodule
