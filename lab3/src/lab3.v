@@ -196,6 +196,7 @@ module clockCounter(
     end
 endmodule
 
+// module to divide the main clock into 4 other clocks
 module clockDivider(
     input wire in_clock,
     input wire in_reset,
