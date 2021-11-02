@@ -374,12 +374,60 @@ module stopwatch(
     .out_seven_segment(m_display_empty)
     );
 
-    always @ (posedge blank_digit) begin
+    always @ (posedge m_segment_clock) begin
         if (b_adjust) begin // blinking
             if (b_select) begin // blink minutes
-
+                if (m_current_display_segment == 0) begin
+                    b_an <= 4'b0111;
+                    if (m_blink_clock) begin
+                        b_seg <= m_display_minutes1;
+                    end else begin
+                        b_seg <= m_display_empty;
+                    end
+                    m_current_display_segment <= m_current_display_segment + 1;
+                end if (m_current_display_segment == 1) begin
+                    b_an <= 4'b1011;
+                    if (m_blink_clock) begin
+                        b_seg <= m_display_minutes0;
+                    end else begin
+                        b_seg <= m_display_empty;
+                    end
+                    m_current_display_segment <= m_current_display_segment + 1;
+                end if (m_current_display_segment == 2) begin
+                    b_an <= 4'b1101;
+                    b_seg <= m_display_seconds1;
+                    m_current_display_segment <= m_current_display_segment + 1;
+                end if (m_current_display_segment == 3) begin
+                    b_an <= 4'b1110;
+                    b_seg <= m_display_seconds0;
+                    m_current_display_segment <= m_current_display_segment + 1;
+                end
             end else begin // blink seconds
-
+                if (m_current_display_segment == 0) begin
+                    b_an <= 4'b0111;
+                    b_seg <= m_display_minutes1;
+                    m_current_display_segment <= m_current_display_segment + 1;
+                end if (m_current_display_segment == 1) begin
+                    b_an <= 4'b1011;
+                    b_seg <= m_display_minutes0;
+                    m_current_display_segment <= m_current_display_segment + 1;
+                end if (m_current_display_segment == 2) begin
+                    b_an <= 4'b1101;
+                    if (m_blink_clock) begin
+                        b_seg <= m_display_seconds1;
+                    end else begin
+                        b_seg <= m_display_empty;
+                    end
+                    m_current_display_segment <= m_current_display_segment + 1;
+                end if (m_current_display_segment == 3) begin
+                    b_an <= 4'b1110;
+                    if (m_blink_clock) begin
+                        b_seg <= m_display_seconds0;
+                    end else begin
+                        b_seg <= m_display_empty;
+                    end
+                    m_current_display_segment <= m_current_display_segment + 1;
+                end
             end
         end else begin // normal
             if (m_current_display_segment == 0) begin
