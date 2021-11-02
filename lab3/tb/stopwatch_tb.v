@@ -23,7 +23,7 @@ module stopwatch_tb;
         .b_seg(b_seg), 
         .b_an(b_an)
     );
-    
+
     always #5 b_clock = ~b_clock;
 
     initial begin
@@ -37,8 +37,8 @@ module stopwatch_tb;
         // Wait 100 ns for global reset to finish
         #100;
         
-		b_reset = 0;
-		
+        b_reset = 0;
+
         // Add stimulus here
         b_adjust = 0;
         #200
@@ -58,6 +58,6 @@ module stopwatch_tb;
         #500
         $finish;
     end
-      
+
 endmodule
 
