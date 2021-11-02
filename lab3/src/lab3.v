@@ -32,19 +32,22 @@ endmodule
 module debouncer(
     input wire in_button,
     input wire in_clock,
-    input wire out_button_debounced
+    output wire out_button_debounced
     );
 
     reg m_button_debounced = 0;
-    reg [11:0] m_count;
-
+    // reg [11:0] m_count;
+    reg [3:0] m_count;
+    
     assign out_button_debounced = m_button_debounced;
 
     always @ (posedge in_clock) begin
+        $display(m_count," ",m_button_debounced," ", out_button_debounced);
         if (in_button) begin
             m_count <= m_count + 1'b1;
             // if button held for 12 in_clock cycles
-            if (m_count == 12'hfff) begin
+            //if (m_count == 12'hfff) begin
+            if (m_count == 4'hf) begin
                 m_count <= 0;
                 m_button_debounced <= 1;
             end
@@ -121,7 +124,7 @@ module clockCounter(
     always @ (posedge in_clock or posedge in_pause) begin
         // if is paused then 
         if (in_pause) begin
-             m_is_paused <= ~m_is_paused;
+            m_is_paused <= ~m_is_paused;
         end else begin
             // do nothing
         end
