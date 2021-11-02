@@ -343,10 +343,10 @@ module stopwatch(
     .in_select(b_select),
     .in_clock(b_clock),
     .in_clock_adj(m_two_hz_clock),
-    .out_minute0(m_minute0),
-    .out_minute1(m_minute1),
-    .out_second0(m_second0),
-    .out_second1(m_second1)
+    .out_minute0(m_minutes0),
+    .out_minute1(m_minutes1),
+    .out_second0(m_seconds0),
+    .out_second1(m_seconds1)
     );
 
     sevenSegmentDisplay m_sevenSegment_second0(
