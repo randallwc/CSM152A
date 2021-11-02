@@ -142,7 +142,6 @@ module clockCounter(
             // adjust mode is on
             if (in_adjust) begin
                 // increase seconds at 2hz
-                // while blinking minutes TODO
                 if (in_select) begin
                     // count up to 59 for seconds
                     if (m_second1 == 5 && m_second0 == 9) begin
@@ -155,7 +154,6 @@ module clockCounter(
                         m_second0 <= m_second0 + 4'b1;
                     end
                 // increase minutes at 2hz
-                // while blinking seconds TODO
                 end else begin
                     // count up to 99 for minutes
                     if (m_minute1 == 9 && m_minute0 == 9) begin
@@ -194,6 +192,68 @@ module clockCounter(
                     m_second0 <= m_second0 + 4'b1;
                 end
             end
+        end
+    end
+endmodule
+
+module clockDivider(
+    input wire in_clock,
+    input wire in_reset,
+    output wire out_one_hz_clock,
+    output wire out_two_hz_clock,
+    output wire out_segment_clock,
+    output wire out_blink_clock
+    );
+
+    reg m_one_hz_clock;
+    reg m_two_hz_clock;
+    reg m_segment_clock;
+    reg m_blink_clock;
+
+    reg [31:0] m_one_hz_count;
+    reg [31:0] m_two_hz_count;
+    reg [31:0] m_segment_count;
+    reg [31:0] m_blink_count;
+
+    assign out_one_hz_clock = m_one_hz_clock;
+    assign out_two_hz_clock = m_two_hz_clock;
+    assign out_segment_clock = m_segment_clock;
+    assign out_blink_clock = m_blink_clock;
+
+    localparam ONE_HZ   = 50000000;
+    localparam TWO_HZ   = 25000000;
+    localparam THREE_HZ = 12500000;
+    localparam ONE_KHZ  = 50000;
+
+    // one hz
+    always @ (posedge in_clock or posedge in_reset) begin
+        if (in_reset) begin
+        end else if () begin
+        end else begin
+        end
+    end
+
+    // two hz
+    always @ (posedge in_clock or posedge in_reset) begin
+        if (in_reset) begin
+        end else if () begin
+        end else begin
+        end
+    end
+
+    // three hz
+    always @ (posedge in_clock or posedge in_reset) begin
+        if (in_reset) begin
+        end else if () begin
+        end else begin
+        end
+    end
+
+    // one khz
+    always @ (posedge in_clock or posedge in_reset) begin
+        if (in_reset) begin
+        end else if () begin
+        end else begin
         end
     end
 endmodule
