@@ -131,10 +131,10 @@ module clockCounter(
     // reset is sync
     always @ (posedge m_clock or posedge in_reset) begin
         if (in_reset) begin
-            out_minute0 <= 4'b0000;
-            out_minute1 <= 4'b0000;
-            out_second0 <= 4'b0000;
-            out_second1 <= 4'b0000;
+            m_minute0 <= 4'b0000;
+            m_minute1 <= 4'b0000;
+            m_second0 <= 4'b0000;
+            m_second1 <= 4'b0000;
         end 
         // only do something if not paused
         else if (m_is_paused == 0) begin
