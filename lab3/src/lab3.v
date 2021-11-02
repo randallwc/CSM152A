@@ -312,6 +312,8 @@ module stopwatch(
     wire m_pause_state;
 
     reg [1:0] m_current_display_segment = 2'b00;
+    reg m_blink_minute = 1'b0;
+    reg m_blink_second = 1'b0;
 
     debouncer m_debouncer_reset(
     .in_button(b_reset),
@@ -368,7 +370,35 @@ module stopwatch(
     );
 
     sevenSegmentDisplay m_sevenSegment_blank(
-    .in_value(4b'1111),
+    .in_value(4'b1111),
     .out_seven_segment(m_display_empty)
     );
+
+    always @ (posedge blank_digit) begin
+        if (b_adjust) begin // blinking
+            if (b_select) begin // blink minutes
+
+            end else begin // blink seconds
+
+            end
+        end else begin // normal
+            if (m_current_display_segment == 0) begin
+                b_an <= 4'b0111;
+                b_seg <= m_display_minutes1;
+                m_current_display_segment <= m_current_display_segment + 1;
+            end if (m_current_display_segment == 1) begin
+                b_an <= 4'b1011;
+                b_seg <= m_display_minutes0;
+                m_current_display_segment <= m_current_display_segment + 1;
+            end if (m_current_display_segment == 2) begin
+                b_an <= 4'b1101;
+                b_seg <= m_display_seconds1;
+                m_current_display_segment <= m_current_display_segment + 1;
+            end if (m_current_display_segment == 3) begin
+                b_an <= 4'b1110;
+                b_seg <= m_display_seconds0;
+                m_current_display_segment <= m_current_display_segment + 1;
+            end
+        end
+    end
 endmodule
