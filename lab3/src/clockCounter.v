@@ -1,5 +1,33 @@
 `timescale 1ns / 1ps
 
+// display to one of the 7-segment displays
+module sevenSegmentDisplay(
+    input wire [3:0] in_value,
+    output wire [7:0] out_seven_segment
+    );
+
+    reg [7:0] m_seven_segment;
+
+    assign out_seven_segment = m_seven_segment;
+
+    // https://www.youtube.com/watch?v=EKX1K9oV_c4&ab_channel=AbdulRehman2050
+    always @ (*) begin
+        case(in_value)
+            4'h0: m_seven_segment = 8'b11000000; // 0
+            4'h1: m_seven_segment = 8'b11111001; // 1
+            4'h2: m_seven_segment = 8'b10100100; // 2
+            4'h3: m_seven_segment = 8'b10110000; // 3
+            4'h4: m_seven_segment = 8'b10011001; // 4
+            4'h5: m_seven_segment = 8'b10010010; // 5
+            4'h6: m_seven_segment = 8'b10000010; // 6
+            4'h7: m_seven_segment = 8'b11111000; // 7
+            4'h8: m_seven_segment = 8'b10000000; // 8
+            4'h9: m_seven_segment = 8'b10010000; // 9
+            default: m_seven_segment = 8'b11111111; // error
+        endcase
+    end
+endmodule
+
 // module to debounce an input signal
 module debouncer(
     input wire in_button,
@@ -108,11 +136,15 @@ module clockCounter(
             out_second0 <= 4'b0000;
             out_second1 <= 4'b0000;
         end 
+        // only do something if not paused
         else if (m_is_paused == 0) begin
+            // SHOULD UPDATE CLOCK IN MODULE m_clockSelector
+            // adjust mode is on
             if (in_adjust) begin
                 // increase seconds at 2hz
-                // while blinking minutes
+                // while blinking minutes TODO
                 if (in_select) begin
+                    // count up to 59 for seconds
                     if (m_second1 == 5 && m_second0 == 9) begin
                         m_second1 <= 0;
                         m_second0 <= 0;
@@ -123,9 +155,10 @@ module clockCounter(
                         m_second0 <= m_second0 + 4'b1;
                     end
                 // increase minutes at 2hz
-                // while blinking seconds
+                // while blinking seconds TODO
                 end else begin
-                    if (m_minute1 == 5 && m_minute0 == 9) begin
+                    // count up to 99 for minutes
+                    if (m_minute1 == 9 && m_minute0 == 9) begin
                         m_minute1 <= 0;
                         m_minute0 <= 0;
                     end else if (m_minute0 == 9) begin
@@ -135,8 +168,31 @@ module clockCounter(
                         m_minute0 <= m_minute0 + 4'b1;
                     end
                 end
+            // normal mode i.e. not adjusting
             end else begin
-                // normal counting
+                // check seconds
+                // seconds goes up to 59
+                if (m_second1 == 5 && m_second0 == 9) begin
+                    // second overflow
+                    // set seconds to 0
+                    m_second1 <= 0;
+                    m_second0 <= 0;
+                    // minutes goes up to 99
+                    if (m_minute1 == 9 && m_minute0 == 9) begin
+                        m_minute1 <= 0;
+                        m_minute0 <= 0;
+                    end else if (m_minute0 == 9) begin
+                        m_minute1 <= m_minute1 + 4'b1;
+                        m_minute0 <= 0;
+                    end else begin
+                        m_minute0 <= m_minute0 + 4'b1;
+                    end
+                end else if (m_second0 == 9) begin
+                    m_second1 <= m_second1 + 4'b1;
+                    m_second0 <= 0;
+                end else begin
+                    m_second0 <= m_second0 + 4'b1;
+                end
             end
         end
     end
