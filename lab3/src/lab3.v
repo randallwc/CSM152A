@@ -220,40 +220,64 @@ module clockDivider(
     assign out_segment_clock = m_segment_clock;
     assign out_blink_clock = m_blink_clock;
 
-    localparam ONE_HZ   = 50000000;
-    localparam TWO_HZ   = 25000000;
-    localparam THREE_HZ = 12500000;
-    localparam ONE_KHZ  = 50000;
+    localparam ONE_HZ   = 50000000-1;
+    localparam TWO_HZ   = 25000000-1;
+    localparam THREE_HZ = 12500000-1;
+    localparam ONE_KHZ  = 50000-1;
 
     // one hz
     always @ (posedge in_clock or posedge in_reset) begin
         if (in_reset) begin
-        end else if () begin
+            m_one_hz_clock <= 0;
+            m_one_hz_count <= 0;
+        end else if (m_one_hz_count == ONE_HZ) begin
+            m_one_hz_clock <= ~out_one_hz_clock; 
+            m_one_hz_count <= 0;
         end else begin
+            m_one_hz_clock <= out_one_hz_clock; 
+            m_one_hz_count <= m_one_hz_count + 1;
         end
     end
 
     // two hz
     always @ (posedge in_clock or posedge in_reset) begin
         if (in_reset) begin
-        end else if () begin
+            m_two_hz_clock <= 0;
+            m_two_hz_count <= 0;
+        end else if (m_two_hz_count == TWO_HZ) begin
+            m_two_hz_clock <= ~out_two_hz_clock; 
+            m_two_hz_count <= 0;
         end else begin
+            m_two_hz_clock <= out_two_hz_clock; 
+            m_two_hz_count <= m_two_hz_count + 1;
         end
     end
 
     // three hz
     always @ (posedge in_clock or posedge in_reset) begin
         if (in_reset) begin
-        end else if () begin
+            m_segment_clock <= 0;
+            m_segment_count <= 0;
+        end else if (m_segment_count == THREE_HZ) begin
+            m_segment_clock <= ~out_segment_clock; 
+            m_segment_count <= 0;
         end else begin
+            m_segment_clock <= out_segment_clock; 
+            m_segment_count <= m_segment_count + 1;
         end
     end
 
     // one khz
     always @ (posedge in_clock or posedge in_reset) begin
         if (in_reset) begin
-        end else if () begin
+            m_blink_clock <= 0;
+            m_blink_count <= 0;
+        end else if (m_blink_count == ONE_KHZ) begin
+            m_blink_clock <= ~out_blink_clock;
+            m_blink_count <= 0;
         end else begin
+            m_blink_clock <= out_blink_clock;
+            m_blink_count <= m_blink_count + 1;
         end
     end
 endmodule
