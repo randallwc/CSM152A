@@ -1,5 +1,31 @@
 `timescale 1ns / 1ps
 
+module debouncer(
+    input wire in_button,
+    input wire in_clock,
+    input wire out_button_debounced
+    );
+
+    reg m_button_debounced = 0;
+    reg [11:0] m_count;
+
+    assign out_button_debounced = m_button_debounced;
+
+    always @ (posedge in_clock) begin
+        if (in_button) begin
+            m_count <= m_count + 1'b1;
+            // if button held for 12 in_clock cycles
+            if (m_count == 12'hfff) begin
+                m_count <= 0;
+                m_button_debounced <= 1;
+            end
+        end else begin
+            m_count <= 0;
+            m_button_debounced <= 0;
+        end
+    end
+endmodule
+
 // module to select which clock to use depending on the adjust input
 module clockSelector(
     input wire in_clock,
@@ -11,7 +37,7 @@ module clockSelector(
     // set in internal clock
     reg m_clock;
     // connect register to output
-    assign clock = m_clock;
+    assign out_clock = m_clock;
 
     // connect the clock register to different clocks depending on the adjust
     // toggle
@@ -43,6 +69,12 @@ module clockCounter(
     reg [3:0] m_second0 = 4'b0000;
     reg [3:0] m_second1 = 4'b0000;
 
+    // connect registers to outputs
+    assign out_minute0 = m_minute0;
+    assign out_minute1 = m_minute1;
+    assign out_second0 = m_second0;
+    assign out_second1 = m_second1;
+
     wire m_clock; // chosen clock
     reg m_is_paused = 0; // paused register
 
@@ -72,10 +104,8 @@ module clockCounter(
             out_minute1 <= 4'b0000;
             out_second0 <= 4'b0000;
             out_second1 <= 4'b0000;
-        end
-
-        
+        end else if (in_adjust) begin
+            
+        end 
     end
-
 endmodule
-
