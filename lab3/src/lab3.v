@@ -28,7 +28,7 @@ module sevenSegmentDisplay(
     end
 endmodule
 
-// module to debounce an input signal
+// module to debounce an input signal // TODO -- CLEAN
 module debouncer(
     input wire in_button,
     input wire in_clock,
@@ -36,18 +36,22 @@ module debouncer(
     );
 
     reg m_button_debounced = 0;
-    // reg [11:0] m_count;
-    reg [3:0] m_count;
+	reg [31:0] m_count;
+	//reg [15:0] m_count;
+    //reg [11:0] m_count;
+    //reg [3:0] m_count;
     
     assign out_button_debounced = m_button_debounced;
 
     always @ (posedge in_clock) begin
-        $display(m_count," ",m_button_debounced," ", out_button_debounced);
+        //$display(m_count," ",m_button_debounced," ", out_button_debounced);
         if (in_button) begin
             m_count <= m_count + 1'b1;
             // if button held for 12 in_clock cycles
+			if (m_count == 32'hffffffff) begin
+			//if (m_count == 16'hffff) begin
             //if (m_count == 12'hfff) begin
-            if (m_count == 4'hf) begin
+            //if (m_count == 4'hf) begin
                 m_count <= 0;
                 m_button_debounced <= 1;
             end
@@ -94,7 +98,8 @@ module clockCounter(
     output wire [3:0] out_minute0,
     output wire [3:0] out_minute1,
     output wire [3:0] out_second0,
-    output wire [3:0] out_second1
+    output wire [3:0] out_second1,
+	output wire out_is_paused
     );
 
     // set internal count of minutes and seconds
@@ -119,6 +124,8 @@ module clockCounter(
         .out_clock(m_clock)
         );
 
+	assign out_is_paused = m_is_paused;
+	
     // if pause button pressed store value in register
     // pause is async
     always @ (posedge in_clock or posedge in_pause) begin
@@ -126,7 +133,7 @@ module clockCounter(
         if (in_pause) begin
             m_is_paused <= ~m_is_paused;
         end else begin
-            // do nothing
+            m_is_paused <= m_is_paused;
         end
     end
 
@@ -226,7 +233,7 @@ module clockDivider(
 
     localparam ONE_HZ   = 50000000-1;
     localparam TWO_HZ   = 25000000-1;
-    localparam THREE_HZ = 12500000-1;
+	localparam THREE_HZ = 12500000-1;
     localparam ONE_KHZ  = 50000-1;
 
     // one hz
@@ -262,7 +269,8 @@ module clockDivider(
         if (in_reset) begin
             m_segment_clock <= 0;
             m_segment_count <= 0;
-        end else if (m_segment_count == THREE_HZ) begin
+        //end else if (m_segment_count == THREE_HZ) begin
+		end else if (m_segment_count == ONE_KHZ) begin
             m_segment_clock <= ~out_segment_clock; 
             m_segment_count <= 0;
         end else begin
@@ -276,7 +284,8 @@ module clockDivider(
         if (in_reset) begin
             m_blink_clock <= 0;
             m_blink_count <= 0;
-        end else if (m_blink_count == ONE_KHZ) begin
+        //end else if (m_blink_count == ONE_KHZ) begin
+		end else if (m_blink_count == THREE_HZ) begin
             m_blink_clock <= ~out_blink_clock;
             m_blink_count <= 0;
         end else begin
@@ -293,8 +302,11 @@ module stopwatch(
     input wire b_select,
     input wire b_adjust,
     output reg [7:0] b_seg,
-    output reg [3:0] b_an
+    output reg [3:0] b_an,
+	output reg b_led
     );
+	wire m_led;
+	always b_led <= m_led;
 
     wire [3:0] m_seconds0;
     wire [3:0] m_seconds1;
@@ -344,12 +356,13 @@ module stopwatch(
     .in_pause(m_pause_state),
     .in_adjust(b_adjust),
     .in_select(b_select),
-    .in_clock(b_clock),
+    .in_clock(m_one_hz_clock),
     .in_clock_adj(m_two_hz_clock),
     .out_minute0(m_minutes0),
     .out_minute1(m_minutes1),
     .out_second0(m_seconds0),
-    .out_second1(m_seconds1)
+    .out_second1(m_seconds1),
+	.out_is_paused(m_led)
     );
 
     sevenSegmentDisplay m_sevenSegment_second0(
@@ -379,7 +392,7 @@ module stopwatch(
 
     always @ (posedge m_segment_clock) begin
         if (b_adjust) begin // blinking
-            if (b_select) begin // blink minutes
+            if (~b_select) begin // blink minutes // TODO change var names
                 if (m_current_display_segment == 0) begin
                     b_an <= 4'b0111;
                     if (m_blink_clock) begin

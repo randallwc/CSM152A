@@ -29,7 +29,7 @@ module stopwatch_tb;
     initial begin
         // Initialize Inputs
         b_clock = 0;
-        b_reset = 0;
+        b_reset = 1;
         b_pause = 0;
         b_select = 0;
         b_adjust = 0;
@@ -37,6 +37,8 @@ module stopwatch_tb;
         // Wait 100 ns for global reset to finish
         #100;
         
+		b_reset = 0;
+		
         // Add stimulus here
         b_adjust = 0;
         #200
