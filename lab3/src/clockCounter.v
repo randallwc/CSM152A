@@ -1,5 +1,6 @@
 `timescale 1ns / 1ps
 
+// module to debounce an input signal
 module debouncer(
     input wire in_button,
     input wire in_clock,
@@ -30,7 +31,7 @@ endmodule
 module clockSelector(
     input wire in_clock,
     input wire in_clock_adj,
-    input wire [1:0] in_adjust,
+    input wire in_adjust,
     output wire out_clock
     );
 
@@ -50,10 +51,12 @@ module clockSelector(
     end
 endmodule
 
+// module to count up minutes and seconds depending on the reset, pause,
+// adjust, and select inputs
 module clockCounter(
     input wire in_reset,
     input wire in_pause,
-    input wire [1:0] in_adjust,
+    input wire in_adjust,
     input wire in_select,
     input wire in_clock,
     input wire in_clock_adj,
@@ -81,7 +84,7 @@ module clockCounter(
     clockSelector m_clockSelector(
         in_clock(in_clock),
         in_clock_adj(in_clock_adj),
-        [1:0] in_adjust(in_adjust),
+        in_adjust(in_adjust),
         out_clock(m_clock)
         );
 
@@ -104,8 +107,37 @@ module clockCounter(
             out_minute1 <= 4'b0000;
             out_second0 <= 4'b0000;
             out_second1 <= 4'b0000;
-        end else if (in_adjust) begin
-            
         end 
+        else if (m_is_paused == 0) begin
+            if (in_adjust) begin
+                // increase seconds at 2hz
+                // while blinking minutes
+                if (in_select) begin
+                    if (m_second1 == 5 && m_second0 == 9) begin
+                        m_second1 <= 0;
+                        m_second0 <= 0;
+                    end else if (m_second0 == 9) begin
+                        m_second1 <= m_second1 + 4'b1;
+                        m_second0 <= 0;
+                    end else begin
+                        m_second0 <= m_second0 + 4'b1;
+                    end
+                // increase minutes at 2hz
+                // while blinking seconds
+                end else begin
+                    if (m_minute1 == 5 && m_minute0 == 9) begin
+                        m_minute1 <= 0;
+                        m_minute0 <= 0;
+                    end else if (m_minute0 == 9) begin
+                        m_minute1 <= m_minute1 + 4'b1;
+                        m_minute0 <= 0;
+                    end else begin
+                        m_minute0 <= m_minute0 + 4'b1;
+                    end
+                end
+            end else begin
+                // normal counting
+            end
+        end
     end
 endmodule
