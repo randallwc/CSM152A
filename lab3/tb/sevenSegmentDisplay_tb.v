@@ -42,7 +42,7 @@ module sevenSegmentDisplay_tb;
 
         // Wait 100 ns for global reset to finish
         #5;
-        
+
         #5 in_value = 0;
         #5 in_value = 1;
         #5 in_value = 2;
@@ -60,10 +60,10 @@ module sevenSegmentDisplay_tb;
         #5 in_value = 0;
         #5 in_value = 0;
         #5 in_value = 0;
-        
+
         // Add stimulus here
         $finish;
     end
-      
+
 endmodule
 

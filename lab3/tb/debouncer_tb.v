@@ -47,7 +47,7 @@ module debouncer_tb;
 
         // Wait 100 ns for global reset to finish
         #100;
-        
+
         // Add stimulus here
         in_button = 1;
         #5
@@ -59,6 +59,6 @@ module debouncer_tb;
         #25000
         $finish;
     end
-      
+
 endmodule
 

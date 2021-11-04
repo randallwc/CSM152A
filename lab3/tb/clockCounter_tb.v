@@ -38,7 +38,7 @@ module clockCounter_tb;
     wire [3:0] out_second0;
     wire [3:0] out_second1;
     wire m_clock;
-    
+
     clockSelector cs_uut (
         .in_clock(in_clock), 
         .in_clock_adj(in_clock_adj), 
@@ -59,9 +59,9 @@ module clockCounter_tb;
         .out_second0(out_second0), 
         .out_second1(out_second1)
     );
-    
+
     always #5 in_clock = ~ in_clock;
-    
+
     always #100 in_clock_adj = ~ in_clock_adj;
 
     initial begin
@@ -75,64 +75,64 @@ module clockCounter_tb;
 
         // Wait 100 ns for global reset to finish
         #10000;
-        
+
         in_pause=1;
-        
+
         #100
-        
+
         in_pause = 0;
-        
+
         #1000
-        
+
         in_pause=1;
-        
+
         #100
-        
+
         in_pause = 0;
-        
+
         #100
-        
+
         in_reset = 1;
-        
+
         #100
-        
+
         in_reset = 0;
-        
+
         #1000
-        
+
         // Add stimulus here
-        
+
         in_adjust = 1;
-        
+
         #1000
-        
+
         in_select = 1;
-        
+
         #1000
-        
+
         in_adjust = 0;
-        
+
         #1000
-        
+
         in_pause = 1;
-        
+
         #100
-        
+
         in_pause = 0;
-        
+
         #1000
-        
+
         in_reset = 1;
-        
+
         #100
-        
+
         in_reset = 0;
-        
+
         #1000
-        
+
         $finish;
 
     end
-      
+
 endmodule
 

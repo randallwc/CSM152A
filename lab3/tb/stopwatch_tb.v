@@ -36,7 +36,7 @@ module stopwatch_tb;
 
         // Wait 100 ns for global reset to finish
         #100;
-        
+
         b_reset = 0;
 
         // Add stimulus here

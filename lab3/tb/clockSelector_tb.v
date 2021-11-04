@@ -39,7 +39,7 @@ module clockSelector_tb;
         .in_adjust(in_adjust), 
         .out_clock(out_clock)
     );
-    
+
     always #5 in_clock = ~ in_clock;
     always #100 in_clock_adj = ~ in_clock_adj;
 
@@ -51,12 +51,12 @@ module clockSelector_tb;
 
         // Wait 100 ns for global reset to finish
         #1234;
-        
+
         // Add stimulus here
         in_adjust = 1;
         #1001
         $finish;
     end
-      
+
 endmodule
 

@@ -28,33 +28,7 @@ module sevenSegmentDisplay(
     end
 endmodule
 
-// module to debounce an input signal // TODO -- CLEAN
-module debouncer(
-    input wire in_button,
-    input wire in_clock,
-    output wire out_button_debounced
-    );
-
-    reg m_button_debounced = 0;
-    reg [15:0] m_count;
-
-    assign out_button_debounced = m_button_debounced;
-
-    always @ (posedge in_clock) begin
-        //$display(m_count," ",m_button_debounced," ", out_button_debounced);
-        if (in_button) begin
-            m_count <= m_count + 1'b1;
-            // if button held for 2^16 in_clock cycles
-            if (m_count == 16'hffff) begin
-                m_count <= 0;
-                m_button_debounced <= 1;
-            end
-        end else begin
-            m_count <= 0;
-            m_button_debounced <= 0;
-        end
-    end
-endmodule
+//TODO -- move in debouncer
 
 // module to select which clock to use depending on the adjust input
 module clockSelector(
@@ -200,7 +174,7 @@ module clockCounter(
     end
 endmodule
 
-// module to divide the main clock into 4 other clocks
+// module to divide the main clock into 4 other clocks // TODO -- fix naming for clocks
 module clockDivider(
     input wire in_clock,
     input wire in_reset,
@@ -297,10 +271,18 @@ module stopwatch(
     input wire b_adjust,
     output reg [7:0] b_seg,
     output reg [3:0] b_an,
-    output reg b_led
+    output wire b_led_pause,
+    output wire b_led_reset,
+    output wire b_led_is_paused,
+    output wire b_led_adjust,
+    output wire b_led_select
     );
-    wire m_led;
-    always b_led <= m_led;
+
+    // connect leds
+    assign b_led_pause = b_pause;
+    assign b_led_reset = b_reset;
+    assign b_led_adjust = b_adjust;
+    assign b_led_select = b_select;
 
     wire [3:0] m_seconds0;
     wire [3:0] m_seconds1;
@@ -356,7 +338,7 @@ module stopwatch(
     .out_minute1(m_minutes1),
     .out_second0(m_seconds0),
     .out_second1(m_seconds1),
-    .out_is_paused(m_led)
+    .out_is_paused(b_led_is_paused) // connect toggle led
     );
 
     sevenSegmentDisplay m_sevenSegment_second0(

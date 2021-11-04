@@ -43,7 +43,7 @@ module clockDivider_tb;
         .out_segment_clock(out_segment_clock), 
         .out_blink_clock(out_blink_clock)
     );
-    
+
     always #5 in_clock = ~in_clock;
 
     initial begin
@@ -53,17 +53,17 @@ module clockDivider_tb;
 
         // Wait 100 ns for global reset to finish
         #100;
-        
+
         in_reset = 0;
-        
+
         #100;
-        
+
         // Add stimulus here
         //#1000000
         //in_reset = 1;
         //$finish;
 
     end
-      
+
 endmodule
 
