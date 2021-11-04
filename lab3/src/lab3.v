@@ -9,6 +9,10 @@ module sevenSegmentDisplay(
     reg [7:0] m_seven_segment;
 
     assign out_seven_segment = m_seven_segment;
+    
+    initial begin
+        m_seven_segment = 8'b11111111;
+    end
 
     // https://www.youtube.com/watch?v=EKX1K9oV_c4&ab_channel=AbdulRehman2050
     always @ (*) begin
@@ -207,6 +211,18 @@ module clockDivider(
     localparam TWO_HZ   = 25000000-1;
     localparam THREE_HZ = 12500000-1;
     localparam ONE_KHZ  = 50000-1;
+    
+    initial begin
+        m_one_hz_clock <= 0;
+        m_two_hz_clock <= 0;
+        m_segment_clock <= 0;
+        m_blink_clock <= 0;
+        
+        m_one_hz_count <= 0;
+        m_two_hz_count <= 0;
+        m_segment_count <= 0;
+        m_blink_count <= 0;
+    end
 
     // one hz
     always @ (posedge in_clock or posedge in_reset) begin

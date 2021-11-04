@@ -6,13 +6,22 @@ module debouncer(
     output wire out_button_debounced // clean output
     );
 
-   wire [17:0] clk_dv_inc;
-   reg [16:0] clk_dv;
-   reg clk_en;
-   reg clk_en_d;
+    wire [17:0] clk_dv_inc;
+    reg [16:0] clk_dv;
+    reg clk_en;
+    reg clk_en_d;
 
-   reg inst_vld;
-   reg [2:0] step_d;
+    reg inst_vld;
+    reg [2:0] step_d;
+   
+    initial begin
+        clk_dv <= 0;
+        clk_en <= 0;
+        clk_en_d <= 0;
+        
+        inst_vld <= 0;
+        step_d <= 0;
+    end
 
    // ===========================================================================
    // 763Hz timing signal for clock enable
