@@ -38,7 +38,7 @@ module debouncer_tb;
         .out_button_debounced(out_button_debounced)
     );
 
-    always #5 in_clock = ~in_clock;
+    always #1 in_clock = ~in_clock;
 
     initial begin
         // Initialize Inputs
@@ -54,9 +54,9 @@ module debouncer_tb;
         in_button = 0;
         #5
         in_button = 1;
-        #25000
+        #280000
         in_button = 0;
-        #25000
+        #280000
         $finish;
     end
 
