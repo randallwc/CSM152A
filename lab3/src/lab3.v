@@ -96,13 +96,17 @@ module clockCounter(
 
     // if pause button pressed store value in register
     // pause is async
-    always @ (posedge in_clock or posedge in_pause) begin
+    /*always @ (posedge in_clock or posedge in_pause) begin
         // if is paused then 
         if (in_pause) begin
             m_is_paused <= ~m_is_paused;
         end else begin
             m_is_paused <= m_is_paused;
         end
+    end
+    */
+    always @ (posedge in_pause) begin
+        m_is_paused <= ~m_is_paused;
     end
 
     // each chosen clock cycle we want to count the right ammout
@@ -272,14 +276,16 @@ module stopwatch(
     output reg [7:0] b_seg,
     output reg [3:0] b_an,
     output wire b_led_pause,
-    output wire b_led_reset,
     output wire b_led_is_paused,
+    output wire b_led_pause_db,
+    output wire b_led_reset,
     output wire b_led_adjust,
     output wire b_led_select
     );
 
     // connect leds
     assign b_led_pause = b_pause;
+    assign b_led_pause_db = m_pause_state;
     assign b_led_reset = b_reset;
     assign b_led_adjust = b_adjust;
     assign b_led_select = b_select;
