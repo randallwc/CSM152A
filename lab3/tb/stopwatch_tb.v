@@ -55,8 +55,8 @@ module stopwatch_tb;
         b_reset = 0;
         b_adjust = 0;
         b_select = 0;
-        #500
-        $finish;
+        #500;
+        //$finish;
     end
 
 endmodule

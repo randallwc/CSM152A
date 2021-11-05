@@ -9,6 +9,10 @@ module sevenSegmentDisplay(
     reg [7:0] m_seven_segment;
 
     assign out_seven_segment = m_seven_segment;
+    
+    initial begin
+        m_seven_segment = 8'b11111111;
+    end
 
     // https://www.youtube.com/watch?v=EKX1K9oV_c4&ab_channel=AbdulRehman2050
     always @ (*) begin
@@ -96,13 +100,17 @@ module clockCounter(
 
     // if pause button pressed store value in register
     // pause is async
-    always @ (posedge in_clock or posedge in_pause) begin
+    /*always @ (posedge in_clock or posedge in_pause) begin
         // if is paused then 
         if (in_pause) begin
             m_is_paused <= ~m_is_paused;
         end else begin
             m_is_paused <= m_is_paused;
         end
+    end
+    */
+    always @ (posedge in_pause) begin
+        m_is_paused <= ~m_is_paused;
     end
 
     // each chosen clock cycle we want to count the right ammout
@@ -203,6 +211,18 @@ module clockDivider(
     localparam TWO_HZ   = 25000000-1;
     localparam THREE_HZ = 12500000-1;
     localparam ONE_KHZ  = 50000-1;
+    
+    initial begin
+        m_one_hz_clock <= 0;
+        m_two_hz_clock <= 0;
+        m_segment_clock <= 0;
+        m_blink_clock <= 0;
+        
+        m_one_hz_count <= 0;
+        m_two_hz_count <= 0;
+        m_segment_count <= 0;
+        m_blink_count <= 0;
+    end
 
     // one hz
     always @ (posedge in_clock or posedge in_reset) begin
@@ -272,14 +292,16 @@ module stopwatch(
     output reg [7:0] b_seg,
     output reg [3:0] b_an,
     output wire b_led_pause,
-    output wire b_led_reset,
     output wire b_led_is_paused,
+    output wire b_led_pause_db,
+    output wire b_led_reset,
     output wire b_led_adjust,
     output wire b_led_select
     );
 
     // connect leds
     assign b_led_pause = b_pause;
+    assign b_led_pause_db = m_pause_state;
     assign b_led_reset = b_reset;
     assign b_led_adjust = b_adjust;
     assign b_led_select = b_select;
