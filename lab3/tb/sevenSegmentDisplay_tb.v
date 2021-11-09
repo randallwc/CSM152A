@@ -1,27 +1,5 @@
 `timescale 1ns / 1ps
 
-////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer:
-//
-// Create Date:   11:26:03 11/02/2021
-// Design Name:   sevenSegmentDisplay
-// Module Name:   C:/Users/wrand/Desktop/CSM152A/tmp/lab3/sevenSegmentDisplay_tb.v
-// Project Name:  lab3
-// Target Device:  
-// Tool versions:  
-// Description: 
-//
-// Verilog Test Fixture created by ISE for module: sevenSegmentDisplay
-//
-// Dependencies:
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-////////////////////////////////////////////////////////////////////////////////
-
 module sevenSegmentDisplay_tb;
 
     // Inputs

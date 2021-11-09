@@ -1,27 +1,5 @@
 `timescale 1ns / 1ps
 
-////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer:
-//
-// Create Date:   11:28:53 11/02/2021
-// Design Name:   clockCounter
-// Module Name:   C:/Users/wrand/Desktop/CSM152A/tmp/lab3/clockCounter_tb.v
-// Project Name:  lab3
-// Target Device:  
-// Tool versions:  
-// Description: 
-//
-// Verilog Test Fixture created by ISE for module: clockCounter
-//
-// Dependencies:
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-////////////////////////////////////////////////////////////////////////////////
-
 module clockCounter_tb;
 
     // Inputs

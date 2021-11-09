@@ -1,27 +1,5 @@
 `timescale 1ns / 1ps
 
-////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer:
-//
-// Create Date:   11:22:48 11/02/2021
-// Design Name:   clockSelector
-// Module Name:   C:/Users/wrand/Desktop/CSM152A/tmp/lab3/clockSelector_tb.v
-// Project Name:  lab3
-// Target Device:  
-// Tool versions:  
-// Description: 
-//
-// Verilog Test Fixture created by ISE for module: clockSelector
-//
-// Dependencies:
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-////////////////////////////////////////////////////////////////////////////////
-
 module clockSelector_tb;
 
     // Inputs
