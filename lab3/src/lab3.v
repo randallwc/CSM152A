@@ -94,6 +94,11 @@ module clockSelector(
 
     // set in internal clock
     reg m_clock;
+    
+    initial begin
+        m_clock <= 0;
+    end
+    
     // connect register to output
     assign out_clock = m_clock;
 
@@ -150,15 +155,6 @@ module clockCounter(
 
     // if pause button pressed store value in register
     // pause is async
-    /*always @ (posedge in_clock or posedge in_pause) begin
-        // if is paused then 
-        if (in_pause) begin
-            m_is_paused <= ~m_is_paused;
-        end else begin
-            m_is_paused <= m_is_paused;
-        end
-    end
-    */
     always @ (posedge in_pause) begin
         m_is_paused <= ~m_is_paused;
     end
@@ -232,7 +228,7 @@ module clockCounter(
     end
 endmodule
 
-// module to divide the main clock into 4 other clocks // TODO -- fix naming for clocks
+// module to divide the main clock into 4 other clocks
 module clockDivider(
     input wire in_clock,
     input wire in_reset,
@@ -302,12 +298,11 @@ module clockDivider(
         end
     end
 
-    // three hz
+    // 1 khz
     always @ (posedge in_clock or posedge in_reset) begin
         if (in_reset) begin
             m_segment_clock <= 0;
             m_segment_count <= 0;
-        //end else if (m_segment_count == THREE_HZ) begin
         end else if (m_segment_count == ONE_KHZ) begin
             m_segment_clock <= ~out_segment_clock; 
             m_segment_count <= 0;
@@ -317,12 +312,11 @@ module clockDivider(
         end
     end
 
-    // one khz
+    // 3 hz
     always @ (posedge in_clock or posedge in_reset) begin
         if (in_reset) begin
             m_blink_clock <= 0;
             m_blink_count <= 0;
-        //end else if (m_blink_count == ONE_KHZ) begin
         end else if (m_blink_count == THREE_HZ) begin
             m_blink_clock <= ~out_blink_clock;
             m_blink_count <= 0;
@@ -440,7 +434,7 @@ module stopwatch(
 
     always @ (posedge m_segment_clock) begin
         if (b_adjust) begin // blinking
-            if (~b_select) begin // blink minutes // TODO change var names
+            if (~b_select) begin // blink minutes
                 if (m_current_display_segment == 0) begin
                     b_an <= 4'b0111;
                     if (m_blink_clock) begin
