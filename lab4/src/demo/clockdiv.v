@@ -1,21 +1,21 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    20:49:36 03/19/2013 
-// Design Name: 
-// Module Name:    clockdiv 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
+// Company:
+// Engineer:
 //
-// Dependencies: 
+// Create Date:    20:49:36 03/19/2013
+// Design Name:
+// Module Name:    clockdiv
+// Project Name:
+// Target Devices:
+// Tool versions:
+// Description:
 //
-// Revision: 
+// Dependencies:
+//
+// Revision:
 // Revision 0.01 - File Created
-// Additional Comments: 
+// Additional Comments:
 //
 //////////////////////////////////////////////////////////////////////////////////
 module clockdiv(
@@ -45,7 +45,7 @@ end
 assign segclk = q[16];
 
 // 50Mhz ÷ 2^1 = 25MHz
-// FIXED -- divide by factor of 4 instead of 2 
+// FIXED -- divide by factor of 4 instead of 2
 assign dclk = q[1];
 
 endmodule
