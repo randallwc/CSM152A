@@ -1,23 +1,5 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company:
-// Engineer:
-//
-// Create Date:    00:30:38 03/19/2013
-// Design Name:
-// Module Name:    vga640x480
-// Project Name:
-// Target Devices:
-// Tool versions:
-// Description:
-//
-// Dependencies:
-//
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-//
-//////////////////////////////////////////////////////////////////////////////////
+
 module vga640x480(
     input wire dclk,            //pixel clock: 25MHz
     input wire clr,         //asynchronous reset
@@ -95,6 +77,7 @@ assign vsync = (vc < vpulse) ? 0:1;
 // is automatically included in the sensitivty list.  In this case, it would be
 // equivalent to the following: always @(hc, vc)
 // Assignment statements can only be used on type "reg" and should be of the "blocking" type: =
+/*
 always @(*)
 begin
     // first check if we're within vertical active video range
@@ -175,5 +158,39 @@ begin
         blue = 0;
     end
 end
-
+*/
+localparam xwidth = 20;
+localparam ywidth = 100;
+localparam x = 100;
+localparam y = 240;
+always @(*)
+begin
+    // first check if we're within vertical active video range
+    if (vc >= vbp && vc < vfp)
+    begin
+        // now display different colors every 80 pixels
+        // while we're within the active horizontal range
+        // -----------------
+        // display white bar
+        if (hc >= (hbp + y) && hc < (hbp+y+ywidth) && vc >= (vbp+x) && vc < (vbp+x+xwidth))
+        begin
+            red = 3'b111;
+            green = 3'b111;
+            blue = 2'b11;
+        end
+        else
+        begin
+            red = 0;
+            green = 0;
+            blue = 0;
+        end
+    end
+    // we're outside active vertical range so display black
+    else
+    begin
+        red = 0;
+        green = 0;
+        blue = 0;
+    end
+end
 endmodule

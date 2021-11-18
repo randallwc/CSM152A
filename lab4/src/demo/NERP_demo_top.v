@@ -1,25 +1,7 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company:
-// Engineer:
-//
-// Create Date:    20:28:25 03/19/2013
-// Design Name:
-// Module Name:    NERP_demo_top
-// Project Name:
-// Target Devices:
-// Tool versions:
-// Description:
-//
-// Dependencies:
-//
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-//
-//////////////////////////////////////////////////////////////////////////////////
+
 module NERP_demo_top(
-	input wire clk,			//master clock = 50MHz
+	input wire clk,			//master clock = 100MHz
 	input wire clr,			//right-most pushbutton for reset
 	output wire [6:0] seg,	//7-segment display LEDs
 	output wire [3:0] an,	//7-segment display anode enable
