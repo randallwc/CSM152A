@@ -13,12 +13,12 @@ module debouncer(
 
     reg inst_vld;
     reg [2:0] step_d;
-   
+
     initial begin
         clk_dv <= 0;
         clk_en <= 0;
         clk_en_d <= 0;
-        
+
         inst_vld <= 0;
         step_d <= 0;
     end
@@ -28,14 +28,14 @@ module debouncer(
    // ===========================================================================
 
    assign clk_dv_inc = clk_dv + 1;
-   
+
    always @ (posedge in_clock)
    begin
       clk_dv <= clk_dv_inc[16:0];
       clk_en <= clk_dv_inc[17];
       clk_en_d <= clk_en;
    end
-   
+
    // ===========================================================================
    // Instruction Stepping Control
    // ===========================================================================
