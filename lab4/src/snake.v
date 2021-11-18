@@ -1,23 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    02:27:41 11/16/2021 
-// Design Name: 
-// Module Name:    snake 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
 `define SIZE 255
 
 module snake(
@@ -27,88 +8,92 @@ module snake(
     input wire in_button_left,
     input wire in_button_right,
     input wire in_button_reset,
-    
-    output wire [7:0] out_VGA_R,
-    output wire [7:0] out_VGA_G,
-    output wire [7:0] out_VGA_B,
+
+    output wire [2:0] out_VGA_R,
+    output wire [2:0] out_VGA_G,
+    output wire [1:0] out_VGA_B,
     output wire out_hSync,
     output wire out_vSync
     );
 
-    reg m_button_up;
-    reg m_button_down;
-    reg m_button_left;
-    reg m_button_right;
-    reg m_button_reset;
-    
-    reg m_VGA_clock;
-    reg m_update_clock;  
-    
-    reg [9:0] m_pixelX;
-    reg [8:0] m_pixelY;
-    
-    reg [4:0] m_direction;
-    
-    reg [10*`SIZE-1:0] out_snakeX;
-    reg [9*`SIZE-1:0] out_snakeY;  
+    wire m_button_up;
+    wire m_button_down;
+    wire m_button_left;
+    wire m_button_right;
+    wire m_button_reset;
 
-    reg [7:0] m_snake_size;
-    reg [9:0] m_appleX;
-    reg [8:0] m_appleY;
-    
-    reg m_snake;
-    reg m_apple;
-    reg m_border;
-    reg m_lethal;
-    reg m_nonlethal;
-    
-    reg [7:0] m_VGA_R;
-    reg [7:0] m_VGA_G;
-    reg [7:0] m_VGA_B;
-    
+    wire m_VGA_clock;
+    wire m_update_clock;
+
+    wire [9:0] m_pixelX;
+    wire [8:0] m_pixelY;
+    wire m_hSync;
+    wire m_vSync;
+
+    wire [4:0] m_direction;
+
+    wire [10*`SIZE-1:0] out_snakeX;
+    wire [9*`SIZE-1:0] out_snakeY;
+
+    wire [7:0] m_snake_size;
+    wire [9:0] m_appleX;
+    wire [8:0] m_appleY;
+
+    wire m_snake;
+    wire m_apple;
+    wire m_border;
+    wire m_lethal;
+    wire m_nonlethal;
+
+    wire [2:0] m_VGA_R;
+    wire [2:0] m_VGA_G;
+    wire [1:0] m_VGA_B;
+
     debouncer m_debouncer_up(
     .in_button(in_button_up),
     .in_clock(in_clock),
     .out_button_debounced(m_button_up)
     );
-    
+
     debouncer m_debouncer_down(
     .in_button(in_button_down),
     .in_clock(in_clock),
     .out_button_debounced(m_button_down)
     );
-    
+
     debouncer m_debouncer_left(
     .in_button(in_button_left),
     .in_clock(in_clock),
     .out_button_debounced(m_button_left)
     );
-    
+
     debouncer m_debouncer_right(
     .in_button(in_button_right),
     .in_clock(in_clock),
     .out_button_debounced(m_button_right)
     );
-    
+
     debouncer m_debouncer_reset(
     .in_button(in_button_reset),
     .in_clock(in_clock),
     .out_button_debounced(m_button_reset)
     );
-    
+
     clock_divider m_clock_divider(
     .in_clock(in_clock),
     .out_VGA_clock(m_VGA_clock),
     .out_update_clock(m_update_clock)
     );
-    
+
     vga_controller m_vga_controller(
     .in_VGA_clock(m_VGA_clock),
     .in_reset(m_button_reset),
     .out_pixelX(m_pixelX),
-    .out_pixelY(m_pixelY)
+    .out_pixelY(m_pixelY),
+    .out_hSync(m_hSync),
+    .out_vSync(m_vSync)
     );
-    
+
     direction_logic m_direction_logic(
     .in_button_up(m_button_up),
     .in_button_down(m_button_down),
@@ -117,7 +102,7 @@ module snake(
     .in_button_reset(m_button_reset),
     .out_direction(m_direction)
     );
-    
+
     snake_logic m_snake_logic(
     .in_update_clock(m_update_clock),
     .in_reset(m_button_reset),
@@ -125,7 +110,7 @@ module snake(
     .out_snakeX(m_snakeX),
     .out_snakeY(m_snakeY)
     );
-    
+
     apple_logic m_apple_logic(
     .in_update_clock(m_update_clock),
     .in_reset(m_button_reset),
@@ -134,7 +119,7 @@ module snake(
     .out_appleX(m_appleX),
     .out_appleY(m_appleY)
     );
-    
+
     collision_logic m_collision_logic(
     .in_pixelX(m_pixelX),
     .in_pixelY(m_pixelY),
@@ -149,7 +134,7 @@ module snake(
     .out_lethal(m_lethal),
     .out_nonlethal(m_nonlethal)
     );
-    
+
     pixel_logic m_pixel_logic(
     .in_reset(m_button_reset),
     .in_snake(m_snake),
@@ -160,11 +145,13 @@ module snake(
     .out_VGA_G(m_VGA_G),
     .out_VGA_B(m_VGA_B)
     );
-    
+
     assign out_VGA_R = m_VGA_R;
     assign out_VGA_G = m_VGA_G;
     assign out_VGA_B = m_VGA_B;
-        
+    assign out_hSync = m_hSync;
+    assign out_vSync = m_vSync;
+
 endmodule
 
 module debouncer(
@@ -180,12 +167,12 @@ module debouncer(
 
     reg inst_vld;
     reg [2:0] step_d;
-   
+
     initial begin
         clk_dv <= 0;
         clk_en <= 0;
         clk_en_d <= 0;
-        
+
         inst_vld <= 0;
         step_d <= 0;
     end
@@ -195,14 +182,14 @@ module debouncer(
    // ===========================================================================
 
    assign clk_dv_inc = clk_dv + 1;
-   
+
    always @ (posedge in_clock)
    begin
       clk_dv <= clk_dv_inc[16:0];
       clk_en <= clk_dv_inc[17];
       clk_en_d <= clk_en;
    end
-   
+
    // ===========================================================================
    // Instruction Stepping Control
    // ===========================================================================
@@ -227,33 +214,53 @@ module direction_logic(
     input wire in_button_reset,
     output [4:0] out_direction
     );
-    
+
     reg [4:0] m_direction;
-    
+
     initial begin
         m_direction = 5'b00001;
     end
     
-    always @(posedge in_button_reset) begin
-    
+    always @(
+    posedge in_button_reset or 
+    posedge in_button_up or 
+    posedge in_button_down or 
+    posedge in_button_left or 
+    posedge in_button_up
+    ) begin
+        if (in_button_reset) begin
+            m_direction = 5'b00001;
+        end else if (in_button_up) begin
+            m_direction = 5'b10000;
+        end else if (in_button_down) begin
+            m_direction = 5'b01000;
+        end else if (in_button_left) begin
+            m_direction = 5'b00100;
+        end else if (in_button_right) begin
+            m_direction = 5'b00010;
+        end
     end
-    
+
+/*    always @(posedge in_button_reset) begin
+        m_direction = 5'b00001;
+    end
+
     always @(posedge in_button_up) begin
         m_direction = 5'b10000;
     end
-    
+
     always @(posedge in_button_down) begin
         m_direction = 5'b01000;
     end
-    
+
     always @(posedge in_button_left) begin
         m_direction = 5'b00100;
     end
-    
-    always @(posedge in_button_up) begin
+
+    always @(posedge in_button_right) begin
         m_direction = 5'b00010;
-    end
-    
+    end*/
+
     assign out_direction = m_direction;
 endmodule
 
@@ -264,48 +271,55 @@ module snake_logic(
     output wire [10*`SIZE-1:0] out_snakeX,
     output wire [9*`SIZE-1:0] out_snakeY
     );
-    
+
     integer i;
-    
+
     reg [9:0] m_snakeX[`SIZE:0];
     reg [8:0] m_snakeY[`SIZE:0];
-    
+
     initial begin
         for (i = 0; i <= `SIZE; i = i+1) begin
             m_snakeX[i] = 320;
             m_snakeY[i] = 240;
         end
     end
-    
-    always @(posedge in_reset) begin
+
+/*    always @(posedge in_reset) begin
         for (i = 0; i <= `SIZE; i = i+1) begin
             m_snakeX[i] = 320;
             m_snakeY[i] = 240;
         end
-    end
-    
-    always @(posedge in_update_clock) begin
-        for (i = `SIZE; i > 0; i = i-1) begin
-            m_snakeX[i] = m_snakeX[i-1];
-            m_snakeX[i] = m_snakeX[i-1];
+    end*/
+
+    always @(posedge in_reset or posedge in_update_clock) begin
+        if (in_reset) begin
+            for (i = 0; i <= `SIZE; i = i+1) begin
+                m_snakeX[i] = 320;
+                m_snakeY[i] = 240;
+            end
+        end else if (in_update_clock) begin
+            for (i = `SIZE; i > 0; i = i-1) begin
+                m_snakeX[i] = m_snakeX[i-1];
+                m_snakeX[i] = m_snakeX[i-1];
+            end
+
+            case (in_direction)
+                5'b10000: m_snakeY[0] = m_snakeY[0] - 10;
+                5'b01000: m_snakeY[0] = m_snakeY[0] + 10;
+                5'b00100: m_snakeX[0] = m_snakeX[0] - 10;
+                5'b00010: m_snakeX[0] = m_snakeX[0] + 10;
+            endcase
         end
-        
-        case (in_direction)
-            5'b10000: m_snakeY[0] = m_snakeY[0] - 10;
-            5'b01000: m_snakeY[0] = m_snakeY[0] + 10;
-            5'b00100: m_snakeX[0] = m_snakeX[0] - 10;
-            5'b00010: m_snakeX[0] = m_snakeX[0] + 10;
-        endcase
     end
-    
+
     generate
         genvar j;
         for (j=0; j<`SIZE; j=j+1) begin: stage
-            assign out_snakeX[j+:10] = m_snakeX[i];
-            assign out_snakeY[j+:9] = m_snakeY[i];
+            assign out_snakeX[10*j+:10] = m_snakeX[j];
+            assign out_snakeY[9*j+:9] = m_snakeY[j];
         end
     endgenerate
-    
+
 endmodule
 
 module collision_logic(
@@ -322,22 +336,22 @@ module collision_logic(
     output wire out_lethal,
     output wire out_nonlethal
     );
-    
+
     reg found_snake_head;
     reg found_snake_body;
     integer i;
-    
+
     initial begin
         found_snake_head = 0;
         found_snake_body = 0;
     end
-    
+
     always @(in_pixelX, in_pixelY) begin
         found_snake_head = (in_pixelX >= in_snakeX[9:0] && in_pixelX < in_snakeX[9:0]+10 &&
                             in_pixelY >= in_snakeY[8:0] && in_pixelY < in_snakeY[8:0]+10);
         for (i = 1; i < in_snake_size; i = i+1) begin
             if (found_snake_body == 0) begin
-                found_snake_body = (in_pixelX >= in_snakeX[i+:10] && in_pixelX < in_snakeX[i+:10]+10 
+                found_snake_body = (in_pixelX >= in_snakeX[i+:10] && in_pixelX < in_snakeX[i+:10]+10
                                && in_pixelY >= in_snakeY[i+:9] && in_pixelY < in_snakeY[i+:9]+10);
             end
         end
@@ -345,7 +359,7 @@ module collision_logic(
 
     assign out_snake = (found_snake_head || found_snake_body);
     assign out_apple = (in_pixelX >= in_appleX && in_pixelX < in_appleX+10 && in_pixelY >= in_appleY && in_pixelY < in_appleY+10);
-    assign out_border = ((in_pixelX >= 0 && in_pixelX < 10) || (in_pixelX >= 630 && in_pixelX < 640) || 
+    assign out_border = ((in_pixelX >= 0 && in_pixelX < 10) || (in_pixelX >= 630 && in_pixelX < 640) ||
                          (in_pixelY >= 0 && in_pixelY < 10) || (in_pixelY >= 470 && in_pixelY < 480));
     assign out_lethal = (found_snake_head && (found_snake_body || out_border));
     assign out_nonlethal = (found_snake_head && out_apple); // relies on correct apple generation
@@ -360,46 +374,61 @@ module apple_logic(
     output wire [9:0] out_appleX,
     output wire [8:0] out_appleY
     );
-    
+
     reg spawn_apple;
-    
+
     reg m_snake_size;
-    
+
     reg [9:0] m_appleX;
     reg [8:0] m_appleY;
-    
+
     initial begin
         spawn_apple = 0;
         m_snake_size = 1;
         m_appleX = 40;
         m_appleY = 40;
     end
-    
-    always @(posedge in_reset) begin
-        spawn_apple = 0;
-        m_snake_size = 1;
-        m_appleX = 40;
-        m_appleY = 40;
+
+    always @(
+    posedge in_reset or 
+    posedge in_nonlethal or 
+    posedge in_update_clock) begin
+        if (in_reset) begin
+            spawn_apple = 0;
+            m_snake_size = 1;
+            m_appleX = 40;
+            m_appleY = 40;
+        end else if (in_nonlethal) begin
+            spawn_apple = 1;
+        end else if (in_update_clock) begin
+            if (spawn_apple) begin
+                m_snake_size = m_snake_size + 1;
+                m_appleX = 600;
+                m_appleY = 440; // needs to be randomized
+
+                spawn_apple = 0;
+            end
+        end
     end
-    
-    always @(posedge in_nonlethal) begin
+
+/*    always @(posedge in_nonlethal) begin
         spawn_apple = 1;
-    end
-    
-    always @(posedge in_update_clock) begin
+    end*/
+
+/*    always @(posedge in_update_clock) begin
         if (spawn_apple) begin
             m_snake_size = m_snake_size + 1;
             m_appleX = 600;
             m_appleY = 440; // needs to be randomized
-            
+
             spawn_apple = 0;
         end
-    end
-    
+    end*/
+
     assign out_snake_size = m_snake_size;
     assign out_appleX = m_appleX;
     assign out_appleY = m_appleY;
-    
+
 endmodule
 
 module pixel_logic(
@@ -408,150 +437,204 @@ module pixel_logic(
     input wire in_apple,
     input wire in_border,
     input wire in_lethal,
-    output wire [7:0] out_VGA_R,
-    output wire [7:0] out_VGA_G,
-    output wire [7:0] out_VGA_B
+    output wire [2:0] out_VGA_R,
+    output wire [2:0] out_VGA_G,
+    output wire [1:0] out_VGA_B
     );
-    
-    reg [7:0] m_VGA_R;
-    reg [7:0] m_VGA_G;
-    reg [7:0] m_VGA_B;
-    
+
+    reg [2:0] m_VGA_R;
+    reg [2:0] m_VGA_G;
+    reg [1:0] m_VGA_B;
+
     reg found_lethal;
-    
+
     initial begin
-        m_VGA_R = 8'b00000000;
-        m_VGA_G = 8'b00000000;
-        m_VGA_B = 8'b00000000;
-        
+        m_VGA_R <= 3'b000;
+        m_VGA_G <= 3'b000;
+        m_VGA_B <= 2'b00;
+
         found_lethal = 0;
     end
-    
-    always @(posedge in_reset) begin
-        m_VGA_R = 8'b00000000;
-        m_VGA_G = 8'b00000000;
-        m_VGA_B = 8'b00000000;
-    
-        found_lethal = 0;
-    end
-    
+
+/*    always @(posedge in_reset) begin
+        m_VGA_R <= 3'b000;
+        m_VGA_G <= 3'b000;
+        m_VGA_B <= 2'b00;
+
+        found_lethal <= 0;
+    end*/
+
     always @(*) begin
-        if (in_lethal) begin
-            found_lethal = 1;
+        if (in_reset) begin
+            m_VGA_R <= 3'b000;
+            m_VGA_G <= 3'b000;
+            m_VGA_B <= 2'b00;
+
+            found_lethal <= 0;
         end
-        
-        if (found_lethal) begin
-            m_VGA_R = 8'b11111111;
-            m_VGA_G = 8'b11111111;
-            m_VGA_B = 8'b11111111;
-        end
-        
-        else if (in_snake) begin
-            m_VGA_R = 8'b00000000;
-            m_VGA_G = 8'b11111111;
-            m_VGA_B = 8'b00000000;
-        end
-        
-        else if (in_apple) begin
-            m_VGA_R = 8'b11111111;
-            m_VGA_G = 8'b00000000;
-            m_VGA_B = 8'b00000000;
-        end
-        
-        else if (in_border) begin
-            m_VGA_R = 8'b00000000;
-            m_VGA_G = 8'b00000000;
-            m_VGA_B = 8'b11111111;
-        end
-        
         else begin
-            m_VGA_R = 8'b00000000;
-            m_VGA_G = 8'b00000000;
-            m_VGA_B = 8'b00000000;
+            if (in_lethal) begin
+                found_lethal <= 1;
+            end
+
+            if (found_lethal) begin
+                m_VGA_R <= 3'b111;
+                m_VGA_G <= 3'b111;
+                m_VGA_B <= 2'b11;
+            end
+
+            else if (in_snake) begin
+                m_VGA_R <= 3'b000;
+                m_VGA_G <= 3'b111;
+                m_VGA_B <= 2'b00;
+            end
+
+            else if (in_apple) begin
+                m_VGA_R <= 3'b111;
+                m_VGA_G <= 3'b000;
+                m_VGA_B <= 2'b00;
+            end
+
+            else if (in_border) begin
+                m_VGA_R <= 3'b000;
+                m_VGA_G <= 3'b000;
+                m_VGA_B <= 2'b11;
+            end
+
+            else begin
+                m_VGA_R <= 3'b000;
+                m_VGA_G <= 3'b000;
+                m_VGA_B <= 2'b00;
+            end
         end
     end
-    
+
     assign out_VGA_R = m_VGA_R;
     assign out_VGA_G = m_VGA_G;
     assign out_VGA_B = m_VGA_B;
-    
+
 endmodule
 
 module vga_controller(
     input wire in_VGA_clock,
     input wire in_reset,
     output [9:0] out_pixelX,
-    output [8:0] out_pixelY
+    output [8:0] out_pixelY,
+    output out_hSync,
+    output out_vSync
     );
     
+    // video structure constants
+    parameter hpixels = 800; // horizontal pixels per line
+    parameter vlines = 521; // vertical lines per frame
+    parameter hpulse = 96; // hsync pulse length
+    parameter vpulse = 2; // vsync pulse length
+    parameter hbp = 144; // end of horizontal back porch
+    parameter hfp = 784; // beginning of horizontal front porch
+    parameter vbp = 31; // end of vertical back porch
+    parameter vfp = 511; // beginning of vertical front porch
+    // active horizontal video is therefore: 784 - 144 = 640
+    // active vertical video is therefore: 511 - 31 = 480
+
     reg [9:0] m_pixelX;
     reg [8:0] m_pixelY;
-    
+
     initial begin
-        m_pixelX = 0;
-        m_pixelY = 0;
+        m_pixelX <= 0;
+        m_pixelY <= 0;
     end
     
-    always @(posedge in_reset) begin
-        m_pixelX = 0;
-        m_pixelY = 0;
-    end
-    
-    always @(posedge in_VGA_clock) begin
-        if (m_pixelX < 640) begin
-            m_pixelX = m_pixelX + 1;
-        end
-        
-        else begin
-            m_pixelX = 0;
-        
-            if (m_pixelY < 480) begin
-                m_pixelY = m_pixelY + 1;
+    // generate sync pulses (active low)
+    // ----------------
+    // "assign" statements are a quick way to
+    // give values to variables of type: wire
+    assign out_hSync = (m_pixelX < hpulse) ? 0:1;
+    assign out_vSync = (m_pixelY < vpulse) ? 0:1;
+
+/*    always @(posedge in_reset) begin
+        m_pixelX <= 0;
+        m_pixelY <= 0;
+    end*/
+
+    always @(posedge in_VGA_clock or posedge in_reset) begin
+        if (in_reset) begin
+            m_pixelX <= 0;
+            m_pixelY <= 0;
+        end else begin
+            if (m_pixelX < 640) begin
+                m_pixelX <= m_pixelX + 1;
             end
-            
+
             else begin
-                m_pixelY = 0;
+                m_pixelX <= 0;
+
+                if (m_pixelY < 480) begin
+                    m_pixelY <= m_pixelY + 1;
+                end
+
+                else begin
+                    m_pixelY <= 0;
+                end
             end
         end
     end
-    
+
     assign out_pixelX = m_pixelX;
     assign out_pixelY = m_pixelY;
-    
+
 endmodule
 
 
 module clock_divider(
-    input wire in_clock, 
-    output wire out_update_clock, 
+    input wire in_clock,
+    output wire out_update_clock,
     output wire out_VGA_clock
     );
     
+    // 17-bit counter variable
+    reg [16:0] q;
+
     reg m_update_clock;
     reg m_VGA_clock;
-    
-	reg [21:0] update_count;	
-    
+
+    reg [21:0] update_count;
+
     initial begin
         m_update_clock = 0;
         m_VGA_clock = 0;
-        
         update_count = 0;
     end
 
-	always@(posedge in_clock)
-	begin
-        m_VGA_clock = ~m_VGA_clock;
-    
-		update_count = update_count + 1;
-		if(update_count == 1777777)
-		begin
-			m_update_clock = ~m_update_clock;
-			update_count = 0;
-		end	
-	end
-    
+    always@(posedge in_clock)
+    begin
+//        m_VGA_clock = ~m_VGA_clock;
+
+        update_count = update_count + 1;
+        if(update_count == 1777777)
+        begin
+            m_update_clock = ~m_update_clock;
+            update_count = 0;
+        end
+    end
+
+    // Clock divider --
+    // Each bit in q is a clock signal that is
+    // only a fraction of the master clock.
+//    always @(posedge in_clock or posedge clr)
+    always @(posedge in_clock)
+    begin
+//        // reset condition
+//        if (clr == 1)
+//            q <= 0;
+//        // increment counter by one
+//        else
+            q <= q + 1;
+    end
+
+    // 50Mhz ÷ 2^1 = 25MHz
+    // FIXED -- divide by factor of 4 instead of 2
+    assign out_VGA_clock = q[1];
     assign out_update_clock = m_update_clock;
-    assign out_VGA_clock = m_VGA_clock;
-    
+//    assign out_VGA_clock = m_VGA_clock;
+
 endmodule
