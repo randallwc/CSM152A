@@ -220,12 +220,12 @@ module direction_logic(
     initial begin
         m_direction = 5'b00001;
     end
-    
+
     always @(
-    posedge in_button_reset or 
-    posedge in_button_up or 
-    posedge in_button_down or 
-    posedge in_button_left or 
+    posedge in_button_reset or
+    posedge in_button_up or
+    posedge in_button_down or
+    posedge in_button_left or
     posedge in_button_up
     ) begin
         if (in_button_reset) begin
@@ -390,8 +390,8 @@ module apple_logic(
     end
 
     always @(
-    posedge in_reset or 
-    posedge in_nonlethal or 
+    posedge in_reset or
+    posedge in_nonlethal or
     posedge in_update_clock) begin
         if (in_reset) begin
             spawn_apple = 0;
@@ -523,7 +523,7 @@ module vga_controller(
     output out_hSync,
     output out_vSync
     );
-    
+
     // video structure constants
     parameter hpixels = 800; // horizontal pixels per line
     parameter vlines = 521; // vertical lines per frame
@@ -543,7 +543,7 @@ module vga_controller(
         m_pixelX <= 0;
         m_pixelY <= 0;
     end
-    
+
     // generate sync pulses (active low)
     // ----------------
     // "assign" statements are a quick way to
@@ -590,7 +590,7 @@ module clock_divider(
     output wire out_update_clock,
     output wire out_VGA_clock
     );
-    
+
     // 17-bit counter variable
     reg [16:0] q;
 
