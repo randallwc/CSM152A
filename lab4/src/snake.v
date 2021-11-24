@@ -44,6 +44,7 @@ module snake(
     wire m_border;
     wire m_lethal;
     wire m_nonlethal;
+    wire m_oobounds;
 
     wire [2:0] m_VGA_R;
     wire [2:0] m_VGA_G;
@@ -132,7 +133,8 @@ module snake(
     .out_apple(m_apple),
     .out_border(m_border),
     .out_lethal(m_lethal),
-    .out_nonlethal(m_nonlethal)
+    .out_nonlethal(m_nonlethal),
+    .out_oobounds(m_oobounds)
     );
 
     pixel_logic m_pixel_logic(
@@ -141,6 +143,7 @@ module snake(
     .in_apple(m_apple),
     .in_border(m_border),
     .in_lethal(m_lethal),
+    .in_oobounds(m_oobounds),
     .out_VGA_R(m_VGA_R),
     .out_VGA_G(m_VGA_G),
     .out_VGA_B(m_VGA_B)
@@ -149,6 +152,11 @@ module snake(
     assign out_VGA_R = m_VGA_R;
     assign out_VGA_G = m_VGA_G;
     assign out_VGA_B = m_VGA_B;
+
+//    assign out_VGA_R = 3'b111;
+//    assign out_VGA_G = 3'b111;
+//    assign out_VGA_B = 2'b11;
+
     assign out_hSync = m_hSync;
     assign out_vSync = m_vSync;
 
@@ -334,7 +342,8 @@ module collision_logic(
     output wire out_apple,
     output wire out_border,
     output wire out_lethal,
-    output wire out_nonlethal
+    output wire out_nonlethal,
+    output wire out_oobounds
     );
 
     reg found_snake_head;
@@ -359,10 +368,11 @@ module collision_logic(
 
     assign out_snake = (found_snake_head || found_snake_body);
     assign out_apple = (in_pixelX >= in_appleX && in_pixelX < in_appleX+10 && in_pixelY >= in_appleY && in_pixelY < in_appleY+10);
-    assign out_border = ((in_pixelX >= 0 && in_pixelX < 10) || (in_pixelX >= 630 && in_pixelX < 640) ||
-                         (in_pixelY >= 0 && in_pixelY < 10) || (in_pixelY >= 470 && in_pixelY < 480));
+    assign out_border = ((in_pixelX >= 0 && in_pixelX < 20) || (in_pixelX >= 620 && in_pixelX < 640) ||
+                         (in_pixelY >= 0 && in_pixelY < 20) || (in_pixelY >= 460 && in_pixelX < 480));
     assign out_lethal = (found_snake_head && (found_snake_body || out_border));
     assign out_nonlethal = (found_snake_head && out_apple); // relies on correct apple generation
+    assign out_oobounds = (in_pixelX >= 640 || in_pixelY >= 480);
 
 endmodule
 
@@ -437,6 +447,7 @@ module pixel_logic(
     input wire in_apple,
     input wire in_border,
     input wire in_lethal,
+    input wire in_oobounds,
     output wire [2:0] out_VGA_R,
     output wire [2:0] out_VGA_G,
     output wire [1:0] out_VGA_B
@@ -477,32 +488,37 @@ module pixel_logic(
                 found_lethal <= 1;
             end
 
-            if (found_lethal) begin
-                m_VGA_R <= 3'b111;
-                m_VGA_G <= 3'b111;
-                m_VGA_B <= 2'b11;
-            end
-
-            else if (in_snake) begin
+            if (in_oobounds) begin
                 m_VGA_R <= 3'b000;
-                m_VGA_G <= 3'b111;
-                m_VGA_B <= 2'b00;
-            end
-
-            else if (in_apple) begin
-                m_VGA_R <= 3'b111;
                 m_VGA_G <= 3'b000;
                 m_VGA_B <= 2'b00;
             end
-
-            else if (in_border) begin
-                m_VGA_R <= 3'b000;
-                m_VGA_G <= 3'b000;
-                m_VGA_B <= 2'b11;
-            end
+//            else if (found_lethal) begin
+//                m_VGA_R <= 3'b111;
+//                m_VGA_G <= 3'b111;
+//                m_VGA_B <= 2'b11;
+//            end
+//
+//            else if (in_snake) begin
+//                m_VGA_R <= 3'b000;
+//                m_VGA_G <= 3'b111;
+//                m_VGA_B <= 2'b00;
+//            end
+//
+//            else if (in_apple) begin
+//                m_VGA_R <= 3'b111;
+//                m_VGA_G <= 3'b000;
+//                m_VGA_B <= 2'b00;
+//            end
+//
+//            else if (in_border) begin
+//                m_VGA_R <= 3'b000;
+//                m_VGA_G <= 3'b000;
+//                m_VGA_B <= 2'b11;
+//            end
 
             else begin
-                m_VGA_R <= 3'b000;
+                m_VGA_R <= 3'b111;
                 m_VGA_G <= 3'b000;
                 m_VGA_B <= 2'b00;
             end
@@ -537,7 +553,7 @@ module vga_controller(
     // active vertical video is therefore: 511 - 31 = 480
 
     reg [9:0] m_pixelX;
-    reg [8:0] m_pixelY;
+    reg [9:0] m_pixelY;
 
     initial begin
         m_pixelX <= 0;
@@ -556,7 +572,7 @@ module vga_controller(
         m_pixelY <= 0;
     end*/
 
-    always @(posedge in_VGA_clock or posedge in_reset) begin
+/*    always @(posedge in_VGA_clock or posedge in_reset) begin
         if (in_reset) begin
             m_pixelX <= 0;
             m_pixelY <= 0;
@@ -577,10 +593,45 @@ module vga_controller(
                 end
             end
         end
+    end*/
+
+    // Horizontal & vertical counters --
+    // this is how we keep track of where we are on the screen.
+    // ------------------------
+    // Sequential "always block", which is a block that is
+    // only triggered on signal transitions or "edges".
+    // posedge = rising edge  &  negedge = falling edge
+    // Assignment statements can only be used on type "reg" and need to be of the "non-blocking" type: <=
+    always @(posedge in_VGA_clock or posedge in_reset)
+    begin
+    // reset condition
+    if (in_reset == 1)
+    begin
+        m_pixelX <= 0;
+        m_pixelY <= 0;
+    end
+    else
+    begin
+        // keep counting until the end of the line
+        if (m_pixelX < hpixels - 1)
+            m_pixelX <= m_pixelX + 1;
+        else
+        // When we hit the end of the line, reset the horizontal
+        // counter and increment the vertical counter.
+        // If vertical counter is at the end of the frame, then
+        // reset that one too.
+        begin
+            m_pixelX <= 0;
+            if (m_pixelY < vlines - 1)
+                m_pixelY <= m_pixelY + 1;
+            else
+                m_pixelY <= 0;
+        end
+    end
     end
 
-    assign out_pixelX = m_pixelX;
-    assign out_pixelY = m_pixelY;
+    assign out_pixelX = m_pixelX-hbp;
+    assign out_pixelY = m_pixelY-vbp;
 
 endmodule
 
@@ -603,6 +654,7 @@ module clock_divider(
         m_update_clock = 0;
         m_VGA_clock = 0;
         update_count = 0;
+        q = 0;
     end
 
     always@(posedge in_clock)
