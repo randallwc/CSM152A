@@ -32,8 +32,8 @@ module snake(
 
     wire [4:0] m_direction;
 
-    wire [10*`SIZE-1:0] out_snakeX;
-    wire [9*`SIZE-1:0] out_snakeY;
+    wire [10*`SIZE-1:0] m_snakeX;
+    wire [9*`SIZE-1:0] m_snakeY;
 
     wire [7:0] m_snake_size;
     wire [9:0] m_appleX;
@@ -331,8 +331,8 @@ module snake_logic(
 endmodule
 
 module collision_logic(
-    input wire in_pixelX,
-    input wire in_pixelY,
+    input wire [9:0] in_pixelX,
+    input wire [8:0] in_pixelY,
     input wire [10*`SIZE-1:0] in_snakeX,
     input wire [9*`SIZE-1:0] in_snakeY,
     input wire [7:0] in_snake_size, // currently 8-bit to represent SIZE = 255
