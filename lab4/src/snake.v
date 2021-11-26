@@ -308,7 +308,7 @@ module snake_logic(
         end else if (in_update_clock) begin
             for (i = `SIZE; i > 0; i = i-1) begin
                 m_snakeX[i] = m_snakeX[i-1];
-                m_snakeX[i] = m_snakeX[i-1];
+                m_snakeY[i] = m_snakeY[i-1];
             end
 
             case (in_direction)
@@ -683,7 +683,7 @@ module clock_divider(
             q <= q + 1;
     end
 
-    // 50Mhz ÷ 2^1 = 25MHz
+    // 50Mhz  2^1 = 25MHz
     // FIXED -- divide by factor of 4 instead of 2
     assign out_VGA_clock = q[1];
     assign out_update_clock = m_update_clock;
