@@ -413,8 +413,8 @@ module apple_logic(
         end else if (in_update_clock) begin
             if (spawn_apple) begin
                 m_snake_size = m_snake_size + 1;
-                m_appleX = 600;
-                m_appleY = 440; // needs to be randomized
+                m_appleX = $random % 590 + 20;
+                m_appleY = $random % 430 + 20; // needs to be randomized
 
                 spawn_apple = 0;
             end
@@ -493,32 +493,32 @@ module pixel_logic(
                 m_VGA_G <= 3'b000;
                 m_VGA_B <= 2'b00;
             end
-//            else if (found_lethal) begin
-//                m_VGA_R <= 3'b111;
-//                m_VGA_G <= 3'b111;
-//                m_VGA_B <= 2'b11;
-//            end
-//
-//            else if (in_snake) begin
-//                m_VGA_R <= 3'b000;
-//                m_VGA_G <= 3'b111;
-//                m_VGA_B <= 2'b00;
-//            end
-//
-//            else if (in_apple) begin
-//                m_VGA_R <= 3'b111;
-//                m_VGA_G <= 3'b000;
-//                m_VGA_B <= 2'b00;
-//            end
-//
-//            else if (in_border) begin
-//                m_VGA_R <= 3'b000;
-//                m_VGA_G <= 3'b000;
-//                m_VGA_B <= 2'b11;
-//            end
+            else if (found_lethal) begin
+                m_VGA_R <= 3'b111;
+                m_VGA_G <= 3'b111;
+                m_VGA_B <= 2'b11;
+            end
+
+            else if (in_snake) begin
+                m_VGA_R <= 3'b000;
+                m_VGA_G <= 3'b111;
+                m_VGA_B <= 2'b00;
+            end
+
+            else if (in_apple) begin
+                m_VGA_R <= 3'b111;
+                m_VGA_G <= 3'b000;
+                m_VGA_B <= 2'b00;
+            end
+
+            else if (in_border) begin
+                m_VGA_R <= 3'b000;
+                m_VGA_G <= 3'b000;
+                m_VGA_B <= 2'b11;
+            end
 
             else begin
-                m_VGA_R <= 3'b111;
+                m_VGA_R <= 3'b000;
                 m_VGA_G <= 3'b000;
                 m_VGA_B <= 2'b00;
             end
