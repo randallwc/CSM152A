@@ -1,1 +1,0 @@
-parameter SIZE = 255;
