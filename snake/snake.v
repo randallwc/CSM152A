@@ -236,15 +236,15 @@ module direction_logic(
     posedge in_button_right
     ) begin
         if (in_button_reset) begin
-            m_direction = 5'b00001;
+            m_direction <= 5'b00001;
         end else if (in_button_up) begin
             m_direction <= 5'b10000;
         end else if (in_button_down) begin
-            m_direction = 5'b01000;
+            m_direction <= 5'b01000;
         end else if (in_button_left) begin
-            m_direction = 5'b00100;
+            m_direction <= 5'b00100;
         end else begin
-            m_direction = 5'b00010;
+            m_direction <= 5'b00010;
         end
     end
 
