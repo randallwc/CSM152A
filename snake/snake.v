@@ -32,12 +32,7 @@ module snake(
     wire m_vSync;
 
     wire [4:0] m_direction;
-    // TODO remove
-    assign Led [0] = m_button_right; 
-    assign Led [1] = m_button_up;
-    assign Led [2] = m_button_down;
-    assign Led [3] = m_button_left;
-    assign Led [7:4] = m_direction [4:1];
+    assign Led = m_snake_size; 
 
     wire [10*`SIZE-1:0] m_snakeX;
     wire [9*`SIZE-1:0] m_snakeY;
@@ -49,8 +44,8 @@ module snake(
     wire m_snake;
     wire m_apple;
     wire m_border;
-    wire m_lethal;
-    wire m_nonlethal;
+    wire m_lethal; // dies
+    wire m_nonlethal; // score
     wire m_oobounds;
 
     wire [2:0] m_VGA_R;
@@ -401,7 +396,7 @@ module apple_logic(
 
     initial begin
         spawn_apple <= 0;
-        m_snake_size <= 3;
+        m_snake_size <= 3; // snake length at start
         m_appleX <= 200;
         m_appleY <= 200;
         m_next_appleX <= 0;
@@ -423,7 +418,7 @@ module apple_logic(
     always @(posedge in_reset or posedge in_nonlethal) begin
         if (in_reset) begin
             spawn_apple = 0;
-            m_snake_size = 3;
+            m_snake_size = 3; // snake length at start
             m_appleX = 200;
             m_appleY = 200;
         end else begin
