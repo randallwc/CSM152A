@@ -335,6 +335,7 @@ module collision_logic(
     reg found_snake_body;
     integer i;
     wire [7:0] m_snake_size;
+    reg m_nonlethal;
     
     assign m_snake_size = in_snake_size % 8;
 
@@ -351,6 +352,10 @@ module collision_logic(
             end
         end
     end
+    
+    always @(in_snakeX,in_snakeY,in_appleX,in_appleY) begin
+        m_nonlethal = in_appleX == in_snakeX[9:0] && in_appleY == in_snakeY[8:0]; //(in_appleX > in_snakeX[9:0] - 10) && (in_appleX < in_snakeX[9:0] + 10) && (in_appleY > in_snakeY[8:0] - 10) && (in_appleY < in_snakeY[8:0] + 10);
+    end
 
     assign found_snake_head = (in_pixelX >= in_snakeX[9:0] && in_pixelX < in_snakeX[9:0]+10 &&
                             in_pixelY >= in_snakeY[8:0] && in_pixelY < in_snakeY[8:0]+10);
@@ -360,7 +365,7 @@ module collision_logic(
     assign out_border = ((in_pixelX >= 0 && in_pixelX < 20) || (in_pixelX >= 620 && in_pixelX < 640) ||
                          (in_pixelY >= 0 && in_pixelY < 20) || (in_pixelY >= 460 && in_pixelY < 480));
     assign out_lethal = 0; //(found_snake_head && (out_border)); //(found_snake_head && (found_snake_body || out_border));
-    assign out_nonlethal = (found_snake_head && out_apple); // relies on correct apple generation
+    assign out_nonlethal = m_nonlethal; // relies on correct apple generation
     assign out_oobounds = (in_pixelX >= 640 || in_pixelY >= 480);
 
 endmodule
@@ -395,29 +400,26 @@ module apple_logic(
 
     always @(
     posedge in_reset or
-    posedge in_nonlethal or
     posedge in_update_clock) begin
+        if (in_reset) begin
+            m_next_appleX = 20;
+            m_next_appleY = 20;
+        end else begin
+            m_next_appleX = (m_next_appleX + 10)% 600; // + 20
+            m_next_appleY = (m_next_appleY + 10)% 440;
+        end
+    end
+    
+    always @(posedge in_reset or posedge in_nonlethal) begin
         if (in_reset) begin
             spawn_apple = 0;
             m_snake_size = 3;
             m_appleX = 40;
             m_appleY = 40;
         end else begin
-            if (in_nonlethal) begin
-                spawn_apple = 1;
-            end 
-            else /*if (in_update_clock)*/ begin
-                if (spawn_apple) begin
-                    m_snake_size = m_snake_size + 1;
-                    m_appleX = m_next_appleX + 20;// m_next_appleX;
-                    m_appleY = m_next_appleY + 20;// m_next_appleY;
-
-                    spawn_apple = 0;
-                end else begin
-                    m_next_appleX = (m_next_appleX + 10)% 600; // + 20
-                    m_next_appleY = (m_next_appleY + 10)% 440; 
-                end
-            end
+            m_snake_size = m_snake_size + 1;
+            m_appleX = m_next_appleX + 20;
+            m_appleY = m_next_appleY + 20;
         end
     end
 
