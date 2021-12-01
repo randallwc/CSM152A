@@ -334,15 +334,19 @@ module collision_logic(
     wire found_snake_head;
     reg found_snake_body;
     integer i;
+    wire [7:0] m_snake_size;
+    
+    assign m_snake_size = in_snake_size % 8;
 
     initial begin
         found_snake_body <= 0;
     end
 
     always @(in_pixelX, in_pixelY) begin
-        for (i = 1; i < 8; i = i+1) begin // change to in_snake_size
-            if (found_snake_body == 0) begin
-                found_snake_body <= (in_pixelX >= in_snakeX[10*i+:10] && in_pixelX < in_snakeX[10*i+:10]+10
+        found_snake_body = 0;
+        for (i = 1; i < `SIZE; i = i+1) begin // change to in_snake_size
+            if (found_snake_body == 0 && i < in_snake_size) begin
+                found_snake_body = (in_pixelX >= in_snakeX[10*i +:10] && in_pixelX < in_snakeX[10*i+:10]+10
                                && in_pixelY >= in_snakeY[9*i+:9] && in_pixelY < in_snakeY[9*i+:9]+10);
             end
         end
@@ -351,11 +355,11 @@ module collision_logic(
     assign found_snake_head = (in_pixelX >= in_snakeX[9:0] && in_pixelX < in_snakeX[9:0]+10 &&
                             in_pixelY >= in_snakeY[8:0] && in_pixelY < in_snakeY[8:0]+10);
                             
-    assign out_snake = (found_snake_head || 0); // fix to show body
+    assign out_snake = (found_snake_head || found_snake_body); // fix to show body
     assign out_apple = (in_pixelX >= in_appleX && in_pixelX < in_appleX+10 && in_pixelY >= in_appleY && in_pixelY < in_appleY+10);
     assign out_border = ((in_pixelX >= 0 && in_pixelX < 20) || (in_pixelX >= 620 && in_pixelX < 640) ||
                          (in_pixelY >= 0 && in_pixelY < 20) || (in_pixelY >= 460 && in_pixelY < 480));
-    assign out_lethal = (found_snake_head && (out_border)); //(found_snake_head && (found_snake_body || out_border));
+    assign out_lethal = 0; //(found_snake_head && (out_border)); //(found_snake_head && (found_snake_body || out_border));
     assign out_nonlethal = (found_snake_head && out_apple); // relies on correct apple generation
     assign out_oobounds = (in_pixelX >= 640 || in_pixelY >= 480);
 
@@ -382,7 +386,7 @@ module apple_logic(
 
     initial begin
         spawn_apple <= 0;
-        m_snake_size <= 1;
+        m_snake_size <= 3;
         m_appleX <= 40;
         m_appleY <= 40;
         m_next_appleX <= 0;
@@ -395,7 +399,7 @@ module apple_logic(
     posedge in_update_clock) begin
         if (in_reset) begin
             spawn_apple <= 0;
-            m_snake_size <= 1;
+            m_snake_size <= 3;
             m_appleX <= 40;
             m_appleY <= 40;
         end else begin
