@@ -331,26 +331,26 @@ module collision_logic(
     output wire out_oobounds
     );
 
-    reg found_snake_head;
+    wire found_snake_head;
     reg found_snake_body;
     integer i;
 
     initial begin
-        found_snake_head = 0;
-        found_snake_body = 0;
+        found_snake_body <= 0;
     end
 
     always @(in_pixelX, in_pixelY) begin
-        found_snake_head = (in_pixelX >= in_snakeX[9:0] && in_pixelX < in_snakeX[9:0]+10 &&
-                            in_pixelY >= in_snakeY[8:0] && in_pixelY < in_snakeY[8:0]+10);
         for (i = 1; i < 8; i = i+1) begin // change to in_snake_size
             if (found_snake_body == 0) begin
-                found_snake_body = (in_pixelX >= in_snakeX[10*i+:10] && in_pixelX < in_snakeX[10*i+:10]+10
+                found_snake_body <= (in_pixelX >= in_snakeX[10*i+:10] && in_pixelX < in_snakeX[10*i+:10]+10
                                && in_pixelY >= in_snakeY[9*i+:9] && in_pixelY < in_snakeY[9*i+:9]+10);
             end
         end
     end
 
+    assign found_snake_head = (in_pixelX >= in_snakeX[9:0] && in_pixelX < in_snakeX[9:0]+10 &&
+                            in_pixelY >= in_snakeY[8:0] && in_pixelY < in_snakeY[8:0]+10);
+                            
     assign out_snake = (found_snake_head || 0); // fix to show body
     assign out_apple = (in_pixelX >= in_appleX && in_pixelX < in_appleX+10 && in_pixelY >= in_appleY && in_pixelY < in_appleY+10);
     assign out_border = ((in_pixelX >= 0 && in_pixelX < 20) || (in_pixelX >= 620 && in_pixelX < 640) ||
@@ -446,22 +446,25 @@ module pixel_logic(
         m_VGA_G <= 3'b000;
         m_VGA_B <= 2'b00;
 
-        found_lethal = 0;
+        found_lethal <= 0;
+    end
+    
+    always @(posedge in_reset or posedge in_lethal) begin
+        if (in_reset) begin
+            found_lethal <= 0;
+        end
+        else begin
+            found_lethal <= 1;
+        end
     end
 
-    always @(*) begin
+    always @(in_reset or in_snake or in_apple or in_border or in_oobounds) begin
         if (in_reset) begin
             m_VGA_R <= 3'b000;
             m_VGA_G <= 3'b000;
             m_VGA_B <= 2'b00;
-
-            found_lethal <= 0;
         end
         else begin
-            if (in_lethal) begin
-                found_lethal <= 1;
-            end
-
             if (in_oobounds) begin
                 m_VGA_R <= 3'b000;
                 m_VGA_G <= 3'b000;
@@ -568,10 +571,11 @@ module vga_controller(
             // reset that one too.
             begin
                 m_pixelX <= 0;
-                if (m_pixelY < vlines - 1)
+                if (m_pixelY < vlines - 1) begin
                     m_pixelY <= m_pixelY + 1;
-                else
+                end else begin
                     m_pixelY <= 0;
+                end
             end
         end
     end
@@ -580,7 +584,6 @@ module vga_controller(
     assign out_pixelY = m_pixelY-vbp;
 
 endmodule
-
 
 // TODO add reset
 module clock_divider(
@@ -618,6 +621,7 @@ module clock_divider(
     // Clock divider --
     // Each bit in q is a clock signal that is
     // only a fraction of the master clock.
+    // TODO -- add reset
 //    always @(posedge in_clock or posedge clr)
     always @(posedge in_clock)
     begin
@@ -629,10 +633,8 @@ module clock_divider(
             q <= q + 1;
     end
 
-    // 50Mhz  2^1 = 25MHz
+    // 100Mhz  2^2 = 25MHz
     // FIXED -- divide by factor of 4 instead of 2
     assign out_VGA_clock = q[1];
     assign out_update_clock = m_update_clock;
-//    assign out_VGA_clock = m_VGA_clock;
-
 endmodule
