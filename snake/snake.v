@@ -398,24 +398,24 @@ module apple_logic(
     posedge in_nonlethal or
     posedge in_update_clock) begin
         if (in_reset) begin
-            spawn_apple <= 0;
-            m_snake_size <= 3;
-            m_appleX <= 40;
-            m_appleY <= 40;
+            spawn_apple = 0;
+            m_snake_size = 3;
+            m_appleX = 40;
+            m_appleY = 40;
         end else begin
             if (in_nonlethal) begin
-                spawn_apple <= 1;
+                spawn_apple = 1;
             end 
-            if (in_update_clock) begin
+            else /*if (in_update_clock)*/ begin
                 if (spawn_apple) begin
-                    m_snake_size <= m_snake_size + 1;
-                    m_appleX <= 300;// m_next_appleX;
-                    m_appleY <= 300;// m_next_appleY;
+                    m_snake_size = m_snake_size + 1;
+                    m_appleX = 300;// m_next_appleX;
+                    m_appleY = 300;// m_next_appleY;
 
-                    spawn_apple <= 0;
+                    spawn_apple = 0;
                 end else begin
-                    m_next_appleX <= (m_next_appleX + 10)% 600 + 20;
-                    m_next_appleY <= (m_next_appleY + 10)% 440 + 20; 
+                    m_next_appleX = (m_next_appleX + 10)% 600 + 20;
+                    m_next_appleY = (m_next_appleY + 10)% 440 + 20; 
                 end
             end
         end
