@@ -14,7 +14,9 @@ module snake(
     output wire [1:0] out_VGA_B,
     output wire [7:0] Led,
     output wire out_hSync,
-    output wire out_vSync
+    output wire out_vSync,
+    
+    inout wire [3:0] JA
     );
 
     wire m_button_up;
@@ -149,6 +151,13 @@ module snake(
     .out_VGA_R(m_VGA_R),
     .out_VGA_G(m_VGA_G),
     .out_VGA_B(m_VGA_B)
+    );
+    
+    synthesizer m_sound(
+    .clk(in_clock),
+    .in_freq(440),
+    .signal(m_lethal || m_nonlethal || m_button_reset),
+    .JA(JA)
     );
 
     assign out_VGA_R = m_VGA_R;

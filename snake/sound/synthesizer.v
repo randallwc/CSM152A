@@ -1,12 +1,13 @@
 `timescale 1ns / 1ps
 
-module synthesizer(clk, signal,JA);
+module synthesizer(clk, in_freq, signal,JA);
     input clk;
     input signal;
     inout [3:0] JA;
+    input [11:0] in_freq;
 
     wire [15:0] sig_square;
-    reg [11:0] freq = 440;
+    reg [11:0] freq;
 
     reg isPlaying;
     reg [32:0] count;
@@ -19,7 +20,7 @@ module synthesizer(clk, signal,JA);
         if (signal == 1 && isPlaying == 0)
         begin
             isPlaying <= 1;
-            freq <= 440;
+            freq <= in_freq;
             count <= 50000000;
         end
         else if (signal == 1 && isPlaying == 1) begin
