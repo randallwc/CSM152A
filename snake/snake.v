@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`define SIZE 255
+`define SIZE 8
 
 module snake(
     input wire in_clock,
@@ -33,10 +33,10 @@ module snake(
 
     wire [4:0] m_direction;
     // TODO remove
-    assign Led [0] = in_button_right; 
-    assign Led [1] = in_button_up;
-    assign Led [2] = in_button_down;
-    assign Led [3] = in_button_left;
+    assign Led [0] = m_button_right; 
+    assign Led [1] = m_button_up;
+    assign Led [2] = m_button_down;
+    assign Led [3] = m_button_left;
     assign Led [7:4] = m_direction [4:1];
 
     wire [10*`SIZE-1:0] m_snakeX;
@@ -225,7 +225,7 @@ module direction_logic(
     reg [4:0] m_direction;
 
     initial begin
-        m_direction = 5'b10000;
+        m_direction = 5'b00001;
     end
 
     always @(
@@ -233,18 +233,18 @@ module direction_logic(
     posedge in_button_up or
     posedge in_button_down or
     posedge in_button_left or
-    posedge in_button_up
+    posedge in_button_right
     ) begin
         if (in_button_reset) begin
-            m_direction = 5'b00001;
+            m_direction <= 5'b00001;
         end else if (in_button_up) begin
-            m_direction = 5'b10000;
+            m_direction <= 5'b10000;
         end else if (in_button_down) begin
-            m_direction = 5'b01000;
+            m_direction <= 5'b01000;
         end else if (in_button_left) begin
-            m_direction = 5'b00100;
+            m_direction <= 5'b00100;
         end else if (in_button_right) begin
-            m_direction = 5'b00010;
+            m_direction <= 5'b00010;
         end
     end
 
@@ -263,11 +263,14 @@ module snake_logic(
 
     reg [9:0] m_snakeX[`SIZE:0];
     reg [8:0] m_snakeY[`SIZE:0];
+    
+//    reg [10*`SIZE-1:0] m_snakeX;
+//    reg [9*`SIZE-1:0] m_snakeY;
 
     initial begin
-        for (i = 0; i <= `SIZE; i = i+1) begin
-            m_snakeX[i] = 320;
-            m_snakeY[i] = 240;
+        for (i = 0; i < `SIZE; i = i+1) begin
+            m_snakeX[i] = 320; // 320;
+            m_snakeY[i] = 240; // 240;
         end
     end
 
@@ -280,21 +283,21 @@ module snake_logic(
 
     always @(posedge in_reset or posedge in_update_clock) begin
         if (in_reset) begin
-            for (i = 0; i <= `SIZE; i = i+1) begin
-                m_snakeX[i] = 320;
-                m_snakeY[i] = 240;
+            for (i = 0; i < `SIZE; i = i+1) begin
+                m_snakeX[i] <= 320;
+                m_snakeY[i] <= 240;
             end
-        end else if (in_update_clock) begin
-            for (i = `SIZE; i > 0; i = i-1) begin
-                m_snakeX[i] = m_snakeX[i-1];
-                m_snakeY[i] = m_snakeY[i-1];
+        end else begin
+            for (i = `SIZE-1; i > 0; i = i-1) begin
+                m_snakeX[i] <= m_snakeX[i-1];
+                m_snakeY[i] <= m_snakeY[i-1];
             end
 
             case (in_direction)
-                5'b10000: m_snakeY[0] = m_snakeY[0] - 10;
-                5'b01000: m_snakeY[0] = m_snakeY[0] + 10;
-                5'b00100: m_snakeX[0] = m_snakeX[0] - 10;
-                5'b00010: m_snakeX[0] = m_snakeX[0] + 10;
+                5'b10000: m_snakeY[0] <= m_snakeY[0] - 10;
+                5'b01000: m_snakeY[0] <= m_snakeY[0] + 10;
+                5'b00100: m_snakeX[0] <= m_snakeX[0] - 10;
+                5'b00010: m_snakeX[0] <= m_snakeX[0] + 10;
             endcase
         end
     end
@@ -306,6 +309,9 @@ module snake_logic(
             assign out_snakeY[9*j+:9] = m_snakeY[j];
         end
     endgenerate
+
+//    assign out_snakeX = m_snakeX;
+//    assign out_snakeY = m_snakeY;
 
 endmodule
 
@@ -337,19 +343,19 @@ module collision_logic(
     always @(in_pixelX, in_pixelY) begin
         found_snake_head = (in_pixelX >= in_snakeX[9:0] && in_pixelX < in_snakeX[9:0]+10 &&
                             in_pixelY >= in_snakeY[8:0] && in_pixelY < in_snakeY[8:0]+10);
-        for (i = 1; i < in_snake_size; i = i+1) begin
+        for (i = 1; i < 8; i = i+1) begin // change to in_snake_size
             if (found_snake_body == 0) begin
-                found_snake_body = (in_pixelX >= in_snakeX[i+:10] && in_pixelX < in_snakeX[i+:10]+10
-                               && in_pixelY >= in_snakeY[i+:9] && in_pixelY < in_snakeY[i+:9]+10);
+                found_snake_body = (in_pixelX >= in_snakeX[10*i+:10] && in_pixelX < in_snakeX[10*i+:10]+10
+                               && in_pixelY >= in_snakeY[9*i+:9] && in_pixelY < in_snakeY[9*i+:9]+10);
             end
         end
     end
 
-    assign out_snake = (found_snake_head || found_snake_body);
+    assign out_snake = (found_snake_head || 0);
     assign out_apple = (in_pixelX >= in_appleX && in_pixelX < in_appleX+10 && in_pixelY >= in_appleY && in_pixelY < in_appleY+10);
     assign out_border = ((in_pixelX >= 0 && in_pixelX < 20) || (in_pixelX >= 620 && in_pixelX < 640) ||
                          (in_pixelY >= 0 && in_pixelY < 20) || (in_pixelY >= 460 && in_pixelY < 480));
-    assign out_lethal = (found_snake_head && (found_snake_body || out_border));
+    assign out_lethal = 0; //(found_snake_head && (found_snake_body || out_border));
     assign out_nonlethal = (found_snake_head && out_apple); // relies on correct apple generation
     assign out_oobounds = (in_pixelX >= 640 || in_pixelY >= 480);
 
@@ -366,7 +372,7 @@ module apple_logic(
 
     reg spawn_apple;
 
-    reg m_snake_size;
+    reg [7:0] m_snake_size;
 
     reg [9:0] m_appleX;
     reg [8:0] m_appleY;
