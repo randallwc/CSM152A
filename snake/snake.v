@@ -106,7 +106,7 @@ module snake(
     .in_button_up(m_button_up),
     .in_button_down(m_button_down),
     .in_button_left(m_button_left),
-    .in_button_right(m_button_right),
+    .in_button_right(m_button_right), // skip debouncer
     .in_button_reset(m_button_reset),
     .out_direction(m_direction)
     );
@@ -243,7 +243,7 @@ module direction_logic(
             m_direction <= 5'b01000;
         end else if (in_button_left) begin
             m_direction <= 5'b00100;
-        end else if (in_button_right) begin
+        end else begin
             m_direction <= 5'b00010;
         end
     end
@@ -351,11 +351,11 @@ module collision_logic(
         end
     end
 
-    assign out_snake = (found_snake_head || 0);
+    assign out_snake = (found_snake_head || 0); // fix to show body
     assign out_apple = (in_pixelX >= in_appleX && in_pixelX < in_appleX+10 && in_pixelY >= in_appleY && in_pixelY < in_appleY+10);
     assign out_border = ((in_pixelX >= 0 && in_pixelX < 20) || (in_pixelX >= 620 && in_pixelX < 640) ||
                          (in_pixelY >= 0 && in_pixelY < 20) || (in_pixelY >= 460 && in_pixelY < 480));
-    assign out_lethal = 0; //(found_snake_head && (found_snake_body || out_border));
+    assign out_lethal = (found_snake_head && (out_border)); //(found_snake_head && (found_snake_body || out_border));
     assign out_nonlethal = (found_snake_head && out_apple); // relies on correct apple generation
     assign out_oobounds = (in_pixelX >= 640 || in_pixelY >= 480);
 
@@ -376,12 +376,17 @@ module apple_logic(
 
     reg [9:0] m_appleX;
     reg [8:0] m_appleY;
+    
+    reg [9:0] m_next_appleX;
+    reg [8:0] m_next_appleY;
 
     initial begin
-        spawn_apple = 0;
-        m_snake_size = 1;
-        m_appleX = 40;
-        m_appleY = 40;
+        spawn_apple <= 0;
+        m_snake_size <= 1;
+        m_appleX <= 40;
+        m_appleY <= 40;
+        m_next_appleX <= 0;
+        m_next_appleY <= 0;
     end
 
     always @(
@@ -389,19 +394,25 @@ module apple_logic(
     posedge in_nonlethal or
     posedge in_update_clock) begin
         if (in_reset) begin
-            spawn_apple = 0;
-            m_snake_size = 1;
-            m_appleX = 40;
-            m_appleY = 40;
-        end else if (in_nonlethal) begin
-            spawn_apple = 1;
-        end else if (in_update_clock) begin
-            if (spawn_apple) begin
-                m_snake_size = m_snake_size + 1;
-                m_appleX = $random % 590 + 20;
-                m_appleY = $random % 430 + 20;
+            spawn_apple <= 0;
+            m_snake_size <= 1;
+            m_appleX <= 40;
+            m_appleY <= 40;
+        end else begin
+            if (in_nonlethal) begin
+                spawn_apple <= 1;
+            end 
+            if (in_update_clock) begin
+                if (spawn_apple) begin
+                    m_snake_size <= m_snake_size + 1;
+                    m_appleX <= 300;// m_next_appleX;
+                    m_appleY <= 300;// m_next_appleY;
 
-                spawn_apple = 0;
+                    spawn_apple <= 0;
+                end else begin
+                    m_next_appleX <= (m_next_appleX + 10)% 600 + 20;
+                    m_next_appleY <= (m_next_appleY + 10)% 440 + 20; 
+                end
             end
         end
     end
@@ -597,7 +608,7 @@ module clock_divider(
     begin
 //        m_VGA_clock = ~m_VGA_clock;
         update_count = update_count + 1;
-        if(update_count == 49999999)
+        if(update_count == 24999999)
         begin
             m_update_clock = ~m_update_clock;
             update_count = 0;
