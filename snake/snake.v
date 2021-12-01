@@ -409,13 +409,13 @@ module apple_logic(
             else /*if (in_update_clock)*/ begin
                 if (spawn_apple) begin
                     m_snake_size = m_snake_size + 1;
-                    m_appleX = 300;// m_next_appleX;
-                    m_appleY = 300;// m_next_appleY;
+                    m_appleX = m_next_appleX + 20;// m_next_appleX;
+                    m_appleY = m_next_appleY + 20;// m_next_appleY;
 
                     spawn_apple = 0;
                 end else begin
-                    m_next_appleX = (m_next_appleX + 10)% 600 + 20;
-                    m_next_appleY = (m_next_appleY + 10)% 440 + 20; 
+                    m_next_appleX = (m_next_appleX + 10)% 600; // + 20
+                    m_next_appleY = (m_next_appleY + 10)% 440; 
                 end
             end
         end
