@@ -58,10 +58,9 @@ endmodule
 module square(
     input wire [11:0] freq, // input frequency
     input wire clk, // 1MHz clock JA[2]
-    output wire [15:0] sig
+    output reg [15:0] sig
     );
 
-    reg [15:0] sig;
     reg [31:0] cycleCount; // count of time
     reg [31:0] sigHalfPeriod; // half period of signal
 
@@ -90,17 +89,13 @@ endmodule
 module make_out(
     input wire [15:0] sig,
     input wire clk, // 100MHz clock
-    output wire masterClkP, // master pmodi2s clock
-    output wire lrClkP, // left-right clock for stereo
-    output wire sigClkP, // single signal bit clock for pmodi2s
-    output wire signalBitP // signal bit
+    output reg masterClkP, // master pmodi2s clock
+    output reg lrClkP, // left-right clock for stereo
+    output reg sigClkP, // single signal bit clock for pmodi2s
+    output reg signalBitP // signal bit
     );
 
     // registers
-    reg masterClkP;
-    reg lrClkP;
-    reg sigClkP;
-    reg signalBitP;
     reg [15:0] sig_temp;
 
     // counters
