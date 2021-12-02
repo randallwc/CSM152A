@@ -15,7 +15,7 @@ module snake(
     output wire [7:0] Led,
     output wire out_hSync,
     output wire out_vSync,
-    
+
     inout wire [3:0] JA
     );
 
@@ -34,7 +34,7 @@ module snake(
     wire m_vSync;
 
     wire [4:0] m_direction;
-    assign Led = m_snake_size; 
+    assign Led = m_snake_size;
 
     wire [10*`SIZE-1:0] m_snakeX;
     wire [9*`SIZE-1:0] m_snakeY;
@@ -152,7 +152,7 @@ module snake(
     .out_VGA_G(m_VGA_G),
     .out_VGA_B(m_VGA_B)
     );
-    
+
     synthesizer m_sound(
     .clk(in_clock),
     .in_freq(440),
@@ -267,7 +267,7 @@ module snake_logic(
 
     reg [9:0] m_snakeX[`SIZE:0];
     reg [8:0] m_snakeY[`SIZE:0];
-    
+
 //    reg [10*`SIZE-1:0] m_snakeX;
 //    reg [9*`SIZE-1:0] m_snakeY;
 
@@ -341,7 +341,7 @@ module collision_logic(
     wire [7:0] m_snake_size;
     reg m_nonlethal;
     reg m_lethal;
-    
+
     assign m_snake_size = in_snake_size % `SIZE;
 
     initial begin
@@ -357,23 +357,23 @@ module collision_logic(
             end
         end
     end
-    
+
     always @(in_snakeX,in_snakeY,in_appleX,in_appleY) begin
         m_nonlethal = in_appleX == in_snakeX[9:0] && in_appleY == in_snakeY[8:0]; //(in_appleX > in_snakeX[9:0] - 10) && (in_appleX < in_snakeX[9:0] + 10) && (in_appleY > in_snakeY[8:0] - 10) && (in_appleY < in_snakeY[8:0] + 10);
-        
+
         m_lethal = 0;
         for (i = 4; i < `SIZE; i = i+1) begin // change to in_snake_size
             if (m_lethal == 0 && i < in_snake_size) begin
                 m_lethal = (in_snakeX[9:0] == in_snakeX[10*i +:10] && in_snakeY[8:0] == in_snakeY[9*i+:9]);
             end
         end
-        
+
         m_lethal = m_lethal || ((in_snakeX[9:0] == 10) + (in_snakeX[9:0] == 620) + (in_snakeY[8:0] == 10) + (in_snakeY[8:0] == 460) == 1);
     end
 
     assign found_snake_head = (in_pixelX >= in_snakeX[9:0] && in_pixelX < in_snakeX[9:0]+10 &&
                             in_pixelY >= in_snakeY[8:0] && in_pixelY < in_snakeY[8:0]+10);
-                            
+
     assign out_snake = (found_snake_head || found_snake_body); // fix to show body
     assign out_apple = (in_pixelX >= in_appleX && in_pixelX < in_appleX+10 && in_pixelY >= in_appleY && in_pixelY < in_appleY+10);
     assign out_border = ((in_pixelX >= 0 && in_pixelX < 20) || (in_pixelX >= 620 && in_pixelX < 640) ||
@@ -399,7 +399,7 @@ module apple_logic(
 
     reg [9:0] m_appleX;
     reg [8:0] m_appleY;
-    
+
     reg [9:0] m_next_appleX;
     reg [8:0] m_next_appleY;
 
@@ -423,7 +423,7 @@ module apple_logic(
             m_next_appleY = (m_next_appleY + 10)% 440;
         end
     end
-    
+
     always @(posedge in_reset or posedge in_nonlethal) begin
         if (in_reset) begin
             spawn_apple = 0;
@@ -468,7 +468,7 @@ module pixel_logic(
 
         found_lethal <= 0;
     end
-    
+
     always @(posedge in_reset or posedge in_lethal) begin
         if (in_reset) begin
             found_lethal <= 0;
