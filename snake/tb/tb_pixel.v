@@ -108,6 +108,9 @@ module tb_pixel;
 		in_border = 0;
 		in_lethal = 0;
 		in_oobounds = 1;
+        
+        #100;
+        $finish;
 
 	end
       

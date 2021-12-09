@@ -67,7 +67,7 @@ module square(
     initial begin
         sig <= 16'b0000111111111111;
         cycleCount <= 0;
-        sigHalfPeriod <= 1000000 / (440 * 2); // start at half of a 440Hz signal
+        sigHalfPeriod <= 1000000/(440*2); // start at half of a 440Hz signal
     end
 
     always @(posedge clk)
@@ -82,7 +82,7 @@ module square(
     end
     always @(freq)
     begin
-        sigHalfPeriod = 1000000 / (freq * 2); // calculate frequency when it changes
+        sigHalfPeriod = 1000000/(freq*2); // calculate frequency when it changes
     end
 endmodule
 

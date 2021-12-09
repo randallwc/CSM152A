@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -lib "secureip" -o "C:/Users/wrand/Desktop/CSM152A/snake/snake_project/tb_snake_logic_isim_beh.exe" -prj "C:/Users/wrand/Desktop/CSM152A/snake/snake_project/tb_snake_logic_beh.prj" "work.tb_snake_logic" "work.glbl" 

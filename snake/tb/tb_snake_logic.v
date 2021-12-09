@@ -42,7 +42,7 @@ module tb_snake_logic;
 		.out_snakeY(out_snakeY)
 	);
     
-    always #5 in_update_clock = ~in_update_clock;
+    always #1 in_update_clock = ~in_update_clock;
 
 	initial begin
 		// Initialize Inputs
@@ -57,17 +57,24 @@ module tb_snake_logic;
 
         in_reset = 0;
         
-        #50;
+        #1000;
         
         in_direction = 5'b00010;
         
-        #50;
-
+        #1000;
+        
         in_direction = 5'b10000;
         
-        #50;
+        #1000;
         
-        in_direction = 5'b00001;
+        in_direction = 5'b01000;
+        
+        #1000;
+        
+        in_direction = 5'b00100;
+        
+        #1000;
+        $finish;
 
 	end
       
